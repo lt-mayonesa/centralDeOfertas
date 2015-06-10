@@ -1,0 +1,107 @@
+{
+    "elements": {
+        "ion-side-menus": {
+            "attributes": {
+                "enable-menu-with-back-views": {}
+            }
+        },
+        "ion-header-bar": {
+            "attributes": {
+                "class": {}
+            }
+        },
+        "ion-tab": {
+            "attributes": {
+                "icon-off": {},
+                "href": {},
+                "title": {},
+                "icon-on": {}
+            }
+        },
+        "ion-nav-back-button": {},
+        "ion-content": {
+            "attributes": {
+                "ng-include": {},
+                "class": {}
+            }
+        },
+        "ion-nav-bar": {
+            "attributes": {
+                "class": {}
+            }
+        },
+        "ion-side-menu": {
+            "attributes": {
+                "side": {},
+                "style": {},
+                "class": {},
+                "enable-menu-with-back-views": {}
+            }
+        },
+        "ion-nav-view": {
+            "attributes": {
+                "name": {},
+                "class": {}
+            }
+        },
+        "ion-list": {
+            "attributes": {
+                "can-swipe": {},
+                "show-delete": {},
+                "ng-style": {},
+                "ng-controller": {},
+                "style": {},
+                "ng-repeat": {},
+                "id": {},
+                "class": {}
+            }
+        },
+        "ion-tabs": {
+            "attributes": {
+                "class": {}
+            }
+        },
+        "ion-item": {
+            "attributes": {
+                "ng-show": {},
+                "ng-animate": {},
+                "ng-click": {},
+                "ng-repeat": {},
+                "style": {},
+                "href": {},
+                "class": {},
+                "ng-hide": {}
+            }
+        },
+        "ion-nav-buttons": {
+            "attributes": {
+                "side": {}
+            }
+        },
+        "ion-modal-view": {
+            "attributes": {
+                "style": {}
+            }
+        },
+        "ion-spinner": {
+            "attributes": {
+                "icon": {},
+                "class": {}
+            }
+        },
+        "ion-view": {
+            "attributes": {
+                "view-title": {}
+            }
+        },
+        "ion-side-menu-content": {}
+    },
+    "attributes": {
+        "menu-toggle": {
+            "context": "button"
+        },
+        "menu-close": {
+            "context": "a"
+        }
+    }
+}

@@ -1,0 +1,10 @@
+<ion-view view-title="Catalogo">
+    <ion-content>
+        <ion-list>
+            <ion-item class="" ng-repeat="brand in brands" href="#/app/tabs/brands/{{brand.id}}">
+                <h2>{{brand.name}}</h2>
+                <span class="badge badge-balanced" ng-bind="salesCount('brand',{{brand.id}})"></span>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

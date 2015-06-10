@@ -1,0 +1,49 @@
+<ion-side-menus enable-menu-with-back-views="true">
+    <ion-side-menu-content>
+        <ion-nav-bar class="bar-energized header-shadow">
+            <ion-nav-back-button>
+            </ion-nav-back-button>
+
+            <ion-nav-buttons side="left">
+                <button class="button button-icon ion-navicon" menu-toggle="left">
+                </button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view name="mainContent"></ion-nav-view>
+    </ion-side-menu-content>
+
+    <ion-side-menu side="left" class="stable-bg">
+        <ion-header-bar class="bar-stable">
+            <h1 class="title" style='text-align: center;'>. . .</h1>
+        </ion-header-bar>
+        <ion-content>
+            <ion-list>
+                <ion-item menu-close class="item item-icon-right" href="#/app/products">
+                    <i class="icon ion-pricetag"></i>
+                    Central
+                </ion-item>
+                <ion-item class="item item-divider item-icon-left">
+                    Catalogo
+                    <i class="icon ion-clipboard"></i>
+                </ion-item>
+                <ion-item menu-close class="item " href="#/app/tabs/categories">
+                    Categorias
+                </ion-item>
+                <ion-item menu-close class="item " href="#/app/tabs/chains">
+                    Cadenas
+                </ion-item>
+                <ion-item menu-close class="item " href="#/app/tabs/brands">
+                    Marcas
+                </ion-item>
+                <ion-item class="item item-divider item-icon-left">
+                    Utilidades
+                    <i class="icon ion-gear-a"></i>
+                </ion-item>
+                <ion-item menu-close class="item item-icon-right" href="#/app/favorites">
+                    Mi Lista
+                    <i class="icon ion-android-list"></i>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus>

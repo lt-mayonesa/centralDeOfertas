@@ -1,0 +1,9 @@
+<div ng-repeat="product in products">
+    <div class="card">
+        <h2 class="item item-button-right">{{product.title}}<button class="button button-icon ion-android-remove-circle" ng-click="removeFav(product.id)"></button></h2>
+        <div class="item item-text-wrap">
+            <p>{{product.type}}</p>
+            <p>{{product.value}}</p>
+        </div>
+    </div>
+</div>

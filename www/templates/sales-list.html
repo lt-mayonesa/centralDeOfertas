@@ -1,0 +1,11 @@
+<ion-list can-swipe="true" ng-controller="SalesListCtrl" class="list-inset">
+    <!--ng-show="([product] | filter:searchText).length > 0"-->
+    <ion-item class="item item-icon-right" ng-repeat="product in products" ng-click="showPopup({{product.id}})">
+        <ion-option-button ng-hide="product.favorite" class="button-balanced" ng-click="addFavorite(product.id)">
+            recordar
+        </ion-option-button>
+        <i ng-show="product.favorite" class="icon ion-android-done"></i>
+        <h2>{{product.title}}</h2>
+        <p><strong>{{product.value}}</strong></p>
+    </ion-item>
+</ion-list>
