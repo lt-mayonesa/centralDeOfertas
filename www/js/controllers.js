@@ -5,7 +5,7 @@ angular.module('starter.controllers', [])
         .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales) {
             $scope.error = false;
 //            $scope.products = Sales.all();
-            $ionicModal.fromTemplateUrl('templates/loader.html').then(function(modal){
+            $ionicModal.fromTemplateUrl('templates/loader.html').then(function (modal) {
                 $scope.modal = modal;
                 $scope.modal.show();
             });
@@ -17,7 +17,7 @@ angular.module('starter.controllers', [])
             }).error(function (response) {
                 $scope.error = true;
             });
-            
+
             $scope.searchSales = function (value) {
                 if (value.length >= 3) {
                     var sales = Sales.search(value);
@@ -37,6 +37,9 @@ angular.module('starter.controllers', [])
         })
 
         .controller('CategoriesCtrl', function ($scope, $http) {
+            $scope.$on('$ionicView.loaded', function (e) {
+                console.log('loaded');
+            });
             $scope.salesCount = function (type, id) {
                 var val = 0;
                 for (var i = 0; i < PRODUCTS.length; i++) {
@@ -45,13 +48,20 @@ angular.module('starter.controllers', [])
                 }
                 return val;
             };
-            $scope.categories = CATEGORIES;
-            $http.get(WS.getAll(WS.ALL_CATEGORIES)).success(function (response) {
-                CATEGORIES = response.data;
+            $scope.loading = true;
+            $scope.$on('$ionicView.afterEnter', function (e) {
                 $scope.categories = CATEGORIES;
+                $http.get(WS.getAll(WS.ALL_CATEGORIES)).success(function (response) {
+                    CATEGORIES = response.data;
+                    $scope.categories = CATEGORIES;
+                });
+                $scope.loading = false;
             });
         })
         .controller('ChainsCtrl', function ($scope, $http) {
+            $scope.$on('$ionicView.loaded', function (e) {
+                console.log('loaded');
+            });
             $scope.salesCount = function (type, id) {
                 var val = 0;
                 for (var i = 0; i < PRODUCTS.length; i++) {
@@ -60,13 +70,20 @@ angular.module('starter.controllers', [])
                 }
                 return val;
             };
-            $scope.chains = CHAINS;
-            $http.get(WS.getAll(WS.ALL_CHAINS)).success(function (response) {
-                CHAINS = response.data;
+            $scope.loading = true;
+            $scope.$on('$ionicView.afterEnter', function (e) {
                 $scope.chains = CHAINS;
+                $http.get(WS.getAll(WS.ALL_CHAINS)).success(function (response) {
+                    CHAINS = response.data;
+                    $scope.chains = CHAINS;
+                });
+                $scope.loading = false;
             });
         })
         .controller('BrandsCtrl', function ($scope, $http) {
+            $scope.$on('$ionicView.loaded', function (e) {
+                console.log('loaded');
+            });
             $scope.salesCount = function (type, id) {
                 var val = 0;
                 for (var i = 0; i < PRODUCTS.length; i++) {
@@ -75,34 +92,51 @@ angular.module('starter.controllers', [])
                 }
                 return val;
             };
-            $scope.brands = BRANDS;
-            $http.get(WS.getAll(WS.ALL_BRANDS)).success(function (response) {
-                BRANDS = response.data;
+            $scope.loading = true;
+            $scope.$on('$ionicView.afterEnter', function (e) {
                 $scope.brands = BRANDS;
+                $http.get(WS.getAll(WS.ALL_BRANDS)).success(function (response) {
+                    BRANDS = response.data;
+                    $scope.brands = BRANDS;
+                });
+                $scope.loading = false;
             });
         })
         .controller('CategoryListCtrl', function ($scope, $http, $stateParams, Sales) {
-            var category = CATEGORIES.findBy('id', $stateParams.id);
-            $scope.category = category;
+            $scope.loading = true;
+            $scope.$on('$ionicView.afterEnter', function (e) {
+                var category = CATEGORIES.findBy('id', $stateParams.id);
+                $scope.category = category;
 //            $http.get(WS.getSalesByType($stateParams.type, $stateParams.id))
 //                    .success(function (response) {
 //                        $scope.products = response.data;
 //                    });
-            var products = Sales.allBy('category', $stateParams.id);
-            $scope.products = products;
+                var products = Sales.allBy('category', $stateParams.id);
+                $scope.products = products;
+                $scope.loading = false;
+            });
+
 
         })
         .controller('ChainListCtrl', function ($scope, $http, $stateParams, Sales) {
-            var category = CHAINS.findBy('id', $stateParams.id);
-            $scope.category = category;
-            var products = Sales.allBy('chain', $stateParams.id);
-            $scope.products = products;
+            $scope.loading = true;
+            $scope.$on('$ionicView.afterEnter', function (e) {
+                var category = CHAINS.findBy('id', $stateParams.id);
+                $scope.category = category;
+                var products = Sales.allBy('chain', $stateParams.id);
+                $scope.products = products;
+                $scope.loading = false;
+            });
         })
         .controller('BrandListCtrl', function ($scope, $http, $stateParams, Sales) {
-            var category = BRANDS.findBy('id', $stateParams.id);
-            $scope.category = category;
-            var products = Sales.allBy('brand', $stateParams.id);
-            $scope.products = products;
+            $scope.loading = true;
+            $scope.$on('$ionicView.afterEnter', function (e) {
+                var category = BRANDS.findBy('id', $stateParams.id);
+                $scope.category = category;
+                var products = Sales.allBy('brand', $stateParams.id);
+                $scope.products = products;
+                $scope.loading = false;
+            });
         })
 
         .controller('FavoritesCtrl', function ($scope, Favorites) {
@@ -131,5 +165,9 @@ angular.module('starter.controllers', [])
                         {text: 'Aceptar', type: 'button-stable'}
                     ]
                 });
+            };
+            $scope.getChain = function (id) {
+                var chain = CHAINS.findBy('id',id);
+                return chain.name;
             };
         });

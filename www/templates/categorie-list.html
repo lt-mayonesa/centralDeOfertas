@@ -1,7 +1,10 @@
 <ion-view view-title="{{category.name}}">
     <ion-content class="padding background-gray">
+        <div ng-show="loading" class="spinner-center">
+            <ion-spinner class="spinner-positive"></ion-spinner>
+        </div>
         <div ng-include="'templates/sales-list.html'">
-            
+
         </div>
     </ion-content>
 </ion-view>

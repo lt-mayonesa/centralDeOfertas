@@ -1,5 +1,8 @@
 <ion-view view-title="Catalogo">
     <ion-content>
+        <div ng-show="loading" class="spinner-center">
+            <ion-spinner class="spinner-positive"></ion-spinner>
+        </div>
         <ion-list>
             <ion-item class="" ng-repeat="brand in brands" href="#/app/tabs/brands/{{brand.id}}">
                 <h2>{{brand.name}}</h2>
