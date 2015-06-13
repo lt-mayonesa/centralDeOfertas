@@ -1,0 +1,21 @@
+<ion-view view-title="Contactanos">
+    <ion-content class="padding">
+        <form ng-submit="sendMessage(data)">
+            <ion-list class="list card">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Nombre</span>
+                    <input type="text" placeholder="Nombre" ng-model="data.name" required>
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Mail</span>
+                    <input type="email" placeholder="Mail" ng-model="data.mail">
+                </label>
+                <label class="item item-input item-floating-label" style="height: 160px;">
+                    <span class="input-label">Mensaje</span>
+                    <textarea type="text" placeholder="Mensaje" ng-model="data.message" rows="6" required></textarea>
+                </label>
+                <button class="button button-block button-positive" type="submit">Enviar</button>
+            </ion-list>
+        </form>
+    </ion-content>
+</ion-view>

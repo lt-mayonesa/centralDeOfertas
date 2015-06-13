@@ -1,11 +1,11 @@
 <ion-list can-swipe="true" ng-controller="SalesListCtrl">
     <!--ng-show="([product] | filter:searchText).length > 0"-->
-    <ion-item class="item item-icon-right" ng-repeat="product in products" ng-click="showPopup(product.id)">
+    <ion-item class="item item-icon-right item-smaller" ng-repeat="product in products" ng-click="showPopup(product.id)">
         <ion-option-button ng-hide="product.favorite" class="button-balanced" ng-click="addFavorite(product.id)">
             recordar
         </ion-option-button>
-        <i ng-show="product.favorite" class="icon ion-android-done"></i>
+        <i ng-show="product.favorite" class="icon ion-android-done tick-favorite" ></i>
         <h2>{{product.title}}</h2>
-        <p><strong>{{product.value}}</strong> - <em>{{getChain(product.chain_id)}}</em></p>
+        <p class="item-prize"><span class="place-badge style-assertive">{{getChain(product.chain_id)}}</span><strong>{{product.value}}</strong></p>
     </ion-item>
 </ion-list>

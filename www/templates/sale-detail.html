@@ -1,5 +1,6 @@
 <div>
     <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{sale.filename | checkImgExtension}}" onerror="this.onerror=null;this['src']='img/default_product.gif';" style="display: block; margin: 0 auto 10px;"/>
+    <!--<p class="badge badge-assertive">{{getChain(sale.id)}}</p>-->
     <p>{{sale.type}}</p>
     <p><strong>{{sale.value}}</strong></p>
     <p><strong><em>{{sale.value_final}}</em></strong></p>

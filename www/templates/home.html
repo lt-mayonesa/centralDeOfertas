@@ -1,19 +1,22 @@
 <ion-view view-title="Central de Ofertas">
-<!--    <ion-header-bar class="bar-subheader item-input-inset">
-        <label class="item-input-wrapper">
-            <i class="icon ion-ios-search placeholder-icon"></i>
-            <input type="text" placeholder="">
-        </label>
-    </ion-header-bar>-->
+    <!--    <ion-header-bar class="bar-subheader item-input-inset">
+            <label class="item-input-wrapper">
+                <i class="icon ion-ios-search placeholder-icon"></i>
+                <input type="text" placeholder="">
+            </label>
+        </ion-header-bar>-->
     <ion-content class="padding background-gray">
         <div class="card">
             <label class="item item-input">
+                <!--<a class="button button-icon icon ion-gear-b icon-pos-right"></a>-->
                 <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" placeholder="" ng-change="searchSales(searchText)" ng-model="searchText">
+                <input type="text" placeholder="producto, marca, precio, etc" ng-change="searchSales(searchText)" ng-model="searchText">
             </label>
         </div>
-        <div ng-include="'templates/sales-list.html'">
-
-        </div>
+        <ion-scroll ng-show="products.length > 0" zooming="false" direction="y" style="width: 100%; max-height: 220px;" class="search-view">
+            <div ng-include="'templates/sales-list.html'">
+            </div>
+        </ion-scroll>
+        <div ng-include="'templates/ranking.html'"></div>
     </ion-content>
 </ion-view>

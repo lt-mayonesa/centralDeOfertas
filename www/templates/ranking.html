@@ -1,0 +1,7 @@
+<h3 class="flat-title title-blue">Top 5</h3>
+<div class="favorites-list" ng-controller="SalesListCtrl">
+    <ion-item class="item-favorite-min" ng-repeat="favorite in favorites" ng-click="showPopup(favorite.id)">
+        <p>{{favorite.title}}</p>
+        <span class="badge badge-royal">{{favorite.totalFavs}}</span>
+    </ion-item>
+</div>

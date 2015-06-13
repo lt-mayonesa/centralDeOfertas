@@ -78,6 +78,16 @@
                 "side": {}
             }
         },
+        "ion-scroll": {
+            "attributes": {
+                "ng-show": {},
+                "style": {},
+                "class": {},
+                "ng-hide": {},
+                "zooming": {},
+                "direction": {}
+            }
+        },
         "ion-modal-view": {
             "attributes": {
                 "style": {}

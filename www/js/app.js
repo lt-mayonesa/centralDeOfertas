@@ -55,6 +55,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                             }
                         }
                     })
+                    .state('app.contact', {
+                        url: '/contact',
+                        views: {
+                            'mainContent': {
+                                templateUrl: 'templates/contact.html',
+                                controller: 'ContactCtrl'
+                            }
+                        }
+                    })
                     .state('app.tabs', {
                         url: '/tabs',
                         abstract: true,

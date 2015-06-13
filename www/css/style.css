@@ -4,7 +4,13 @@
 }
 
 .background-gray {
-    background-color: #e4e4e4;
+    background: #dfe5d7; /* Old browsers */
+    background: -moz-linear-gradient(top,  #dfe5d7 40%, #e0e0e0 93%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(40%,#dfe5d7), color-stop(93%,#e0e0e0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #dfe5d7 40%,#e0e0e0 93%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #dfe5d7 40%,#e0e0e0 93%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #dfe5d7 40%,#e0e0e0 93%); /* IE10+ */
+    background: linear-gradient(to bottom,  #dfe5d7 40%,#e0e0e0 93%); /* W3C */
 }
 
 .header-shadow {
@@ -14,4 +20,88 @@
 .spinner-center {
     margin: 0 auto;
     width: 32px;
+}
+
+.place-badge {
+    border-radius: 10px;
+    padding: 0px 10px 2px;
+    line-height: 24px;
+    float: left;
+}
+
+.style-assertive {
+    background-color: #E63B00;
+    color: #fff !important;
+}
+
+.item-smaller {
+    /*border-color: #74C313;*/
+}
+
+.item-smaller div:first-child {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    /*background-color: #C7F464;*/
+}
+
+.tick-favorite {
+    color: #669C00;
+}
+.search-view {
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+.item-divider.item-dark {
+    background-color: #333;
+}
+.badge.side-badge {
+    right: 16px;
+}
+
+.icon-pos-right {
+    position: absolute;
+    top: 0;
+    right: 8px;
+}
+
+.item-prize {
+    background-color: rgba(255, 120, 73,0.2);
+    border-radius: 10px;
+    padding: 0;
+    padding-right: 10px;
+    line-height: 26px;
+    margin: 0;
+    margin-top: 8px;
+    text-align: right;
+}
+
+.item-favorite {
+    margin: 10px;
+    border-top: 1px dotted #444;
+}
+.item-favorite h2 {
+    margin-bottom: -10px;
+}
+
+.item-favorite h2 button {
+    color: #A72B00;
+    font-size: 25px !important;
+    top: 4px !important;
+    right: 6px !important;
+}
+
+.flat-title {
+    background-color: #00A053;
+    padding: 10px;
+    color: #fff;
+    font-size: 15px;
+    margin: 5px 0;
+    margin-top: 20px !important;
+}
+.favorites-list {
+    margin: 0 2px;
+}
+.item-favorite-min {
+    margin: 5px 0;
+    border-top: 2px dotted #444;
 }

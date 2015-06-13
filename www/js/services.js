@@ -1,4 +1,4 @@
-/* global PRODUCTS, angular, BRANDS */
+/* global PRODUCTS, angular, CHAINS */
 
 angular.module('starter.services', [])
 
@@ -57,10 +57,10 @@ angular.module('starter.services', [])
                     var sales = [];
                     for (var i = 0; i < PRODUCTS.length; i++) {
                         for (var key in PRODUCTS[i]) {
-                            if (key === 'title' || key === 'value' || key === 'type' || key === 'brand_id') {
+                            if (key === 'title' || key === 'value' || key === 'type' || key === 'chain_id') {
                                 var item;
-                                if (key === 'brand_id') {
-                                    item = BRANDS[BRANDS.findKeyBy('id', PRODUCTS[i][key])].name;
+                                if (key === 'chain_id') {
+                                    item = CHAINS[CHAINS.findKeyBy('id', PRODUCTS[i][key])].name;
                                 } else {
                                     item = PRODUCTS[i][key];
                                 }
@@ -73,6 +73,16 @@ angular.module('starter.services', [])
                         }
                     }
                     return sales;
+                },
+                favoritesByIds: function (array) {
+                    var favorites = [];
+                    for (var i = 0; i < array.length; i ++) {
+                        var item = PRODUCTS.findBy('id', array[i].sale_id);
+                        if (item)
+                            item.totalFavs = array[i].total;
+                            favorites.push(item);
+                    }
+                    return favorites;
                 }
             };
         });

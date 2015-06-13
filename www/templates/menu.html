@@ -5,7 +5,7 @@
             </ion-nav-back-button>
 
             <ion-nav-buttons side="left">
-                <button class="button button-icon ion-navicon" menu-toggle="left">
+                <button class="button icon ion-navicon" menu-toggle="left">
                 </button>
             </ion-nav-buttons>
         </ion-nav-bar>
@@ -39,9 +39,14 @@
                     Utilidades
                     <i class="icon ion-gear-a"></i>
                 </ion-item>
-                <ion-item menu-close class="item item-icon-right" href="#/app/favorites">
+                <ion-item menu-close class="item item-side-badge" href="#/app/favorites">
                     Mi Lista
-                    <i class="icon ion-android-list"></i>
+                    <!--<i class="icon ion-android-list"></i>-->
+                    <span class="badge badge-royal side-badge">{{myFavoritesCount()}}</span>
+                </ion-item>
+                <ion-item menu-close class="item item-icon-right" href="#/app/contact">
+                    Contacto
+                    <i class="icon ion-chatboxes"></i>
                 </ion-item>
             </ion-list>
         </ion-content>

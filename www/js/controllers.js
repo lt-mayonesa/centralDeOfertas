@@ -2,7 +2,10 @@
 
 angular.module('starter.controllers', [])
 
-        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales) {
+        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites) {
+            function wsError() {
+                $scope.error = true;
+            }
             $scope.error = false;
 //            $scope.products = Sales.all();
             $ionicModal.fromTemplateUrl('templates/loader.html').then(function (modal) {
@@ -13,10 +16,11 @@ angular.module('starter.controllers', [])
                 PRODUCTS = response.data;
                 //Sales.clone(response.data);
 //                $scope.products = Sales.all();
-                $scope.modal.hide();
-            }).error(function (response) {
-                $scope.error = true;
-            });
+                $http.get(WS.getTopFavorites()).success(function (response) {
+                    $scope.favorites = Sales.favoritesByIds(response.data);
+                    $scope.modal.hide();
+                }).error(wsError());
+            }).error(wsError());
 
             $scope.searchSales = function (value) {
                 if (value.length >= 3) {
@@ -25,6 +29,10 @@ angular.module('starter.controllers', [])
                 } else {
                     $scope.products = [];
                 }
+            };
+
+            $scope.myFavoritesCount = function () {
+                return Favorites.all().length;
             };
         })
         .controller('ProductsCtrl', function ($scope, $http, Sales) {
@@ -38,7 +46,6 @@ angular.module('starter.controllers', [])
 
         .controller('CategoriesCtrl', function ($scope, $http) {
             $scope.$on('$ionicView.loaded', function (e) {
-                console.log('loaded');
             });
             $scope.salesCount = function (type, id) {
                 var val = 0;
@@ -60,7 +67,6 @@ angular.module('starter.controllers', [])
         })
         .controller('ChainsCtrl', function ($scope, $http) {
             $scope.$on('$ionicView.loaded', function (e) {
-                console.log('loaded');
             });
             $scope.salesCount = function (type, id) {
                 var val = 0;
@@ -72,7 +78,7 @@ angular.module('starter.controllers', [])
             };
             $scope.loading = true;
             $scope.$on('$ionicView.afterEnter', function (e) {
-                $scope.chains = CHAINS;
+                //$scope.chains = CHAINS;
                 $http.get(WS.getAll(WS.ALL_CHAINS)).success(function (response) {
                     CHAINS = response.data;
                     $scope.chains = CHAINS;
@@ -82,7 +88,6 @@ angular.module('starter.controllers', [])
         })
         .controller('BrandsCtrl', function ($scope, $http) {
             $scope.$on('$ionicView.loaded', function (e) {
-                console.log('loaded');
             });
             $scope.salesCount = function (type, id) {
                 var val = 0;
@@ -143,6 +148,10 @@ angular.module('starter.controllers', [])
             $scope.removeFav = function (id) {
                 Favorites.remove(id);
             };
+            $scope.getChain = function (id) {
+                var chain = CHAINS.findBy('id', id);
+                return chain.name;
+            };
             $scope.products = Favorites.all();
         })
 
@@ -151,12 +160,7 @@ angular.module('starter.controllers', [])
                 Favorites.add(id);
             };
             $scope.showPopup = function (id) {
-                for (var i = 0; i < PRODUCTS.length; i++) {
-                    if (PRODUCTS[i].id == id) {
-                        $scope.sale = PRODUCTS[i];
-                        break;
-                    }
-                }
+                $scope.sale = PRODUCTS.findBy('id', id);
                 var detailPopup = $ionicPopup.show({
                     title: $scope.sale.title,
                     templateUrl: 'templates/sale-detail.html',
@@ -167,7 +171,45 @@ angular.module('starter.controllers', [])
                 });
             };
             $scope.getChain = function (id) {
-                var chain = CHAINS.findBy('id',id);
-                return chain.name;
+                var chain = CHAINS.findBy('id', id);
+                if (chain)
+                    return chain.name;
+            };
+        })
+        .controller('ContactCtrl', function ($scope, $http, $ionicPopup) {
+            $scope.sendMessage = function (data) {
+                var email;
+                if (data.mail === null || data.mail === '') {
+                    email = '';
+                } else {
+                    email = data.mail;
+                }
+                canSend = true;
+                if (data.name === null || data.name === '') {
+                    canSend = false;
+                }
+                if (data.message === null || data.message === '') {
+                    canSend = false;
+                }
+
+                if (canSend) {
+                    $http.get(WS.sendMessage(data.name, data.message, email)).success(function (data) {
+                        var succesPopup = $ionicPopup.show({
+                            title: 'Mensaje Enviado!',
+                            subTitle: 'Gracias por enviarnos tu opinion',
+                            buttons: [
+                                {text: 'Aceptar', type: 'button-stable'}
+                            ]
+                        });
+                    }).error(function (data, status, headers) {
+                        var errorPopup = $ionicPopup.show({
+                            title: 'Error',
+                            subTitle: 'Lo sentimos pero hubo un error en la conección',
+                            button: [
+                                {text: 'Aceptar', type: 'button-stable'}
+                            ]
+                        });
+                    });
+                }
             };
         });

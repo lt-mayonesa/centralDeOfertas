@@ -1,9 +1,11 @@
 <div ng-repeat="product in products">
-    <div class="card">
+    <div class="item-favorite">
         <h2 class="item item-button-right">{{product.title}}<button class="button button-icon ion-android-remove-circle" ng-click="removeFav(product.id)"></button></h2>
-        <div class="item item-text-wrap">
+        <div class="item item-thumbnail-right">
+            <img ng-src="{{product.filename}}" alt="img" onerror="this.onerror=null;this['src']='img/default_product.gif';" />
             <p>{{product.type}}</p>
             <p>{{product.value}}</p>
+            <p class="place-badge style-assertive">{{getChain(product.chain_id)}}</p>
         </div>
     </div>
 </div>
