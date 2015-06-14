@@ -4,9 +4,9 @@
             <ion-spinner class="spinner-positive"></ion-spinner>
         </div>
         <ion-list>
-            <ion-item ng-repeat="chain in chains" href="#/app/tabs/chains/{{chain.id}}">
+            <ion-item ng-hide="chain.pCount == 0" ng-repeat="chain in chains | orderBy: '-pCount'" href="#/app/tabs/chains/{{chain.id}}">
                 <h2>{{chain.name}}</h2>
-                <span class="badge badge-balanced" ng-bind="salesCount('chain',{{chain.id}})"></span>
+                <span class="badge badge-balanced" ng-bind="chain.pCount"></span>
             </ion-item>
         </ion-list>
     </ion-content>

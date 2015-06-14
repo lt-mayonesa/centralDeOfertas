@@ -2,17 +2,20 @@
     <ion-content class="padding">
         <form ng-submit="sendMessage(data)">
             <ion-list class="list card">
+                <span class="assertive" ng-show="fillName"> - Por favor ingrese su nombre</span>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Nombre</span>
-                    <input type="text" placeholder="Nombre" ng-model="data.name" required>
+                    <input ng-click="fillName = false" type="text" placeholder="Nombre" ng-model="data.name">
                 </label>
+                <span class="assertive" ng-show="fillEmail"> - Por favor ingrese un email</span>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Mail</span>
-                    <input type="email" placeholder="Mail" ng-model="data.mail">
+                    <input ng-click="fillEmail = false" type="email" placeholder="Mail" ng-model="data.mail">
                 </label>
+                <span class="assertive" ng-show="fillMessage"> - Por favor ingrese un mensaje</span>
                 <label class="item item-input item-floating-label" style="height: 160px;">
                     <span class="input-label">Mensaje</span>
-                    <textarea type="text" placeholder="Mensaje" ng-model="data.message" rows="6" required></textarea>
+                    <textarea ng-click="fillMessage = false" type="text" placeholder="Mensaje" ng-model="data.message" rows="6"></textarea>
                 </label>
                 <button class="button button-block button-positive" type="submit">Enviar</button>
             </ion-list>

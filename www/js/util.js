@@ -57,7 +57,7 @@ var WS = {
      * 
      * @type String messages-postmessage
      */
-    SEND_MESSAGE: 'messages-postmessage',
+    SEND_MESSAGE: 'messages-sendemail',
     format: {
         json: '/json.api?www-command=',
         xml: '/xml.api?www-command=',
@@ -115,8 +115,7 @@ var WS = {
     },
     sendMessage: function (name, message, email, format) {
         var f = format || 'json';
-        var e = email == null ? '' : '&mail=' + email;
-        return WS.BASE_URL + WS.format[f] + WS.SEND_MESSAGE + '&name=' + name + '&message=' + message + e;
+        return WS.BASE_URL + WS.format[f] + WS.SEND_MESSAGE + '&name=' + name + '&mail=' + email + '&message=' + message;
     }
 
 };
@@ -145,7 +144,7 @@ Array.prototype.findBy = function (key, value) {
                 return item;
             }
         } else if (typeof value === 'number') {
-            if (item[key] == value) {
+            if (parseInt(item[key]) === value) {
                 return item;
             }
         }
@@ -167,7 +166,7 @@ Array.prototype.findKeyBy = function (key, value) {
                 return i;
             }
         } else if (typeof value === 'number') {
-            if (item[key] == value) {
+            if (item[key] === value) {
                 return i;
             }
         }

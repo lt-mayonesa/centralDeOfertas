@@ -82,6 +82,7 @@
             "attributes": {
                 "ng-show": {},
                 "style": {},
+                "id": {},
                 "class": {},
                 "ng-hide": {},
                 "zooming": {},

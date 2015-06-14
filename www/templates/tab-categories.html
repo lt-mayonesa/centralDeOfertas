@@ -4,9 +4,9 @@
             <ion-spinner class="spinner-positive"></ion-spinner>
         </div>
         <ion-list>
-            <ion-item class="" ng-repeat="category in categories" href="#/app/tabs/categories/{{category.id}}">
+            <ion-item ng-hide="category.pCount == 0" ng-repeat="category in categories | orderBy:'-pCount'" href="#/app/tabs/categories/{{category.id}}">
                 <h2>{{category.name}}</h2>
-                <span class="badge badge-balanced" ng-bind="salesCount('category',{{category.id}})"></span>
+                <span class="badge badge-balanced" ng-bind="category.pCount"></span>
             </ion-item>
         </ion-list>
     </ion-content>

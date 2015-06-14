@@ -2,6 +2,6 @@
 <div class="favorites-list" ng-controller="SalesListCtrl">
     <ion-item class="item-favorite-min" ng-repeat="favorite in favorites" ng-click="showPopup(favorite.id)">
         <p>{{favorite.title}}</p>
-        <span class="badge badge-royal">{{favorite.totalFavs}}</span>
+        <span class="badge badge-royal side-badge">{{favorite.totalFavs}}</span>
     </ion-item>
 </div>
