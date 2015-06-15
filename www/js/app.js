@@ -1,16 +1,13 @@
-// Ionic Starter App
+// Powered by Ionic
+/**
+ * @author Joaquin Campero <juacocampero@gmail.com>
+ */
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
+var db = null;
 
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
 
-
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
-
-        .run(function ($ionicPlatform) {
+        .run(function ($ionicPlatform, $cordovaSQLite) {
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -22,6 +19,41 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                     StatusBar.styleLightContent();
                 }
 
+                if (window.cordova) {
+                    db = $cordovaSQLite.openDB('centralDeOfertas.db');
+                } else {
+                    db = window.openDatabase("centralDeOfertas.db", "1.0", "Central de Ofertas", -1);
+                }
+                $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `sales` (`id` INTEGER PRIMARY KEY,`title` VARCHAR(100) NULL,`type` VARCHAR(100) NULL,`category_id` INTEGER NULL,`brand_id` INTEGER NULL,`chain_id` INTEGER NULL,`manufacturer_id` INTEGER NULL,`filename` VARCHAR(100) NULL,`value` VARCHAR(20) NULL,`value_final` VARCHAR(20) NULL,`date_from` DATETIME NULL,`data_to` DATETIME NULL)')
+                        .then(function (res) {
+//                            console.log('sales table created', res);
+                        }, function (error) {
+//                            console.error(error);
+                        });
+                $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `brands` (`id` INTEGER NOT NULL PRIMARY KEY,`name` VARCHAR(100) NOT NULL)')
+                        .then(function (res) {
+//                            console.log('brands table created', res);
+                        }, function (error) {
+//                            console.error(error);
+                        });
+                $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `chains` (`id` INTEGER NOT NULL PRIMARY KEY,`name` VARCHAR(100) NOT NULL)')
+                        .then(function (res) {
+//                            console.log('chains table created', res);
+                        }, function (error) {
+//                            console.error(error);
+                        });
+                $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `categories` (`id` INTEGER NOT NULL PRIMARY KEY,`name` VARCHAR(100) NOT NULL)')
+                        .then(function (res) {
+//                            console.log('categories table created', res);
+                        }, function (error) {
+//                            console.error(error);
+                        });
+                $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `favorites` (`id` INTEGER AUTO INCREMENT PRIMARY KEY,`sale_id` INTERGER NULL)')
+                        .then(function (res) {
+//                            console.log('favorites table created', res);
+                        }, function (error) {
+//                            console.error(error);
+                        });
             });
         })
 

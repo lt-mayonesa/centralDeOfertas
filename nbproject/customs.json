@@ -22,6 +22,7 @@
         "ion-content": {
             "attributes": {
                 "ng-include": {},
+                "overflow-scroll": {},
                 "class": {}
             }
         },
@@ -53,6 +54,7 @@
                 "style": {},
                 "ng-repeat": {},
                 "id": {},
+                "ng-switch": {},
                 "class": {}
             }
         },
@@ -64,13 +66,17 @@
         "ion-item": {
             "attributes": {
                 "ng-show": {},
+                "collection-repeat": {},
+                "item-height": {},
                 "ng-animate": {},
+                "ng-switch-when": {},
                 "ng-click": {},
                 "ng-repeat": {},
                 "style": {},
                 "href": {},
                 "class": {},
-                "ng-hide": {}
+                "ng-hide": {},
+                "ng-switch-default": {}
             }
         },
         "ion-nav-buttons": {
@@ -81,6 +87,7 @@
         "ion-scroll": {
             "attributes": {
                 "ng-show": {},
+                "ng-style": {},
                 "style": {},
                 "id": {},
                 "class": {},

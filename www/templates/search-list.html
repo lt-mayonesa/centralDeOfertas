@@ -1,6 +1,6 @@
 <ion-list can-swipe="true" ng-controller="SalesListCtrl">
     <!--ng-show="([product] | filter:searchText).length > 0"-->
-    <ion-item class="item item-icon-right item-smaller" collection-repeat="product in products | orderBy: 'title'" ng-click="showPopup(product.id)">
+    <ion-item class="item item-icon-right item-smaller" ng-repeat="product in products | orderBy: 'title' | limitTo:20" ng-click="showPopup(product.id)">
         <ion-option-button ng-hide="product.favorite" class="button-balanced" ng-click="addFavorite(product.id)">
             recordar
         </ion-option-button>

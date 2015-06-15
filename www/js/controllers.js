@@ -9,25 +9,34 @@ angular.module('starter.controllers', [])
                 $scope.modal = modal;
                 $scope.modal.show();
             });
-            $http.get(WS.getAll(WS.ALL_SALES)).success(function (response) {
-                PRODUCTS = response.data;
-                //Sales.clone(response.data);
+            $scope.closeModal = function () {
+                $scope.modal.hide();
+            };
+            $scope.sync = function () {
+                $scope.error = false;
+                $http.get(WS.getAll(WS.ALL_SALES)).success(function (response) {
+                    Sales.clone(response.data);
+                    //Sales.clone(response.data);
 //                $scope.products = Sales.all();
-                $http.get(WS.getTopFavorites()).success(function (response) {
-                    $scope.favorites = Sales.favoritesByIds(response.data);
-                    $scope.modal.hide();
+                    Favorites.getFromLocal();
+                    $http.get(WS.getTopFavorites()).success(function (response) {
+                        $scope.favorites = Sales.favoritesByIds(response.data);
+                        $scope.modal.hide();
+                    }).error(function (data, status) {
+//                        console.log(data, status);
+                        $scope.error = true;
+                    });
                 }).error(function (data, status) {
-                    console.log(data, status);
+//                    console.log(data, status);
                     $scope.error = true;
                 });
-            }).error(function (data, status) {
-                console.log(data, status);
-                $scope.error = true;
-            });
+            };
+            
+            $scope.sync();
 
             $scope.searchSales = function (value) {
                 if (value.length >= 3) {
-                    var sales = Sales.search(value);
+                    var sales = Sales.search(value, $scope.products);
                     $scope.products = sales;
                 } else {
                     $scope.products = [];
@@ -69,6 +78,8 @@ angular.module('starter.controllers', [])
             $scope.loading = true;
             $http.get(WS.getAll(WS.ALL_BRANDS)).success(function (response) {
                 Brands.clone(response.data);
+            }).error(function (error) {
+                Brands.updateFromLocal();
             });
             $scope.$on('$ionicView.afterEnter', function (e) {
                 $timeout(function () {
