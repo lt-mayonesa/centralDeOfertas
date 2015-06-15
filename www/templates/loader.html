@@ -3,10 +3,10 @@
         <img ng-src="img/logo.jpg" alt="logo" style="display: block; margin: 0px auto; margin-top: 180px;"/>
         <h4 ng-hide="error" style="text-align: center; margin-top: 30px; line-height: 30px">cargando ofertas<br><ion-spinner class="spinner-dark"></ion-spinner></h4>
         <div ng-show="error">
-            <h6 style="text-align: center; margin-top: 30px;">Un error...</h6>
+            <h6 style="text-align: center; margin-top: 30px;" ng-bind="errorMsg">Un error...</h6>
             <div style="width: 88px; margin: 20px auto 0px; border-top: 1px dotted #444;">
                 <button class="button button-icon icon ion-refresh positive" ng-click="sync()"></button>
-                <button class="button button-icon icon ion-chevron-down balanced" ng-click="closeModal()"></button>
+                <button class="button button-icon icon ion-chevron-down balanced" ng-click="syncLater()"></button>
             </div>
         </div>
     </ion-content>

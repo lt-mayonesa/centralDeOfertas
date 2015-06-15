@@ -23,6 +23,7 @@
             "attributes": {
                 "ng-include": {},
                 "overflow-scroll": {},
+                "has-bouncing": {},
                 "class": {}
             }
         },

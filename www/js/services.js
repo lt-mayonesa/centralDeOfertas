@@ -106,7 +106,7 @@ angular.module('starter.services', [])
             };
 
         })
-        .factory('Sales', function () {
+        .factory('Sales', function ($rootScope,DBA) {
             var products = [];
             return {
                 all: function () {
@@ -128,6 +128,27 @@ angular.module('starter.services', [])
                 },
                 clone: function (data) {
                     products = data;
+                    DBA.query("DELETE FROM sales").then(function (res) {
+                        for (var i = 0; i < data.length; i++) {
+                            var p = [
+                                data[i].id,
+                                data[i].title,
+                                data[i].type,
+                                data[i].category_id,
+                                data[i].brand_id,
+                                data[i].chain_id,
+                                data[i].manufacturer_id,
+                                data[i].filename,
+                                data[i].value,
+                                data[i].value_final,
+                                data[i].date_from,
+                                data[i].date_to,
+                                data[i].chain
+                            ];
+                            DBA.query("INSERT INTO sales VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", p);
+                        }
+                    });
+                    return true;
                 },
                 search: function (data) {
                     var sales = [];
@@ -214,6 +235,13 @@ angular.module('starter.services', [])
                             val++;
                     }
                     return val;
+                },
+                updateFromLocal: function () {
+                    DBA.query("SELECT * FROM sales").then(function (result) {
+                        var data = DBA.getAll(result);
+                        products = data;
+                        $rootScope.$broadcast('finishSales');
+                    });
                 }
             };
         })

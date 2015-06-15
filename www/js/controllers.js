@@ -9,8 +9,12 @@ angular.module('starter.controllers', [])
                 $scope.modal = modal;
                 $scope.modal.show();
             });
-            $scope.closeModal = function () {
-                $scope.modal.hide();
+            $scope.syncLater = function () {
+                Sales.updateFromLocal();
+                $scope.$on('finishSales', function () {
+                    Favorites.getFromLocal();
+                    $scope.modal.hide();
+                });
             };
             $scope.sync = function () {
                 $scope.error = false;
@@ -25,13 +29,15 @@ angular.module('starter.controllers', [])
                     }).error(function (data, status) {
 //                        console.log(data, status);
                         $scope.error = true;
+                        $scope.errorMsg = 'Error cargando el ranking.';
                     });
                 }).error(function (data, status) {
 //                    console.log(data, status);
                     $scope.error = true;
+                    $scope.errorMsg = 'Error de conexion desconocido.';
                 });
             };
-            
+
             $scope.sync();
 
             $scope.searchSales = function (value) {
