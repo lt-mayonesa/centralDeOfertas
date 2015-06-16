@@ -5,7 +5,7 @@
 
 var db = null;
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services'])
 
         .run(function ($ionicPlatform, $cordovaSQLite) {
             $ionicPlatform.ready(function () {
@@ -20,39 +20,46 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 }
 
                 if (window.cordova) {
-                    db = $cordovaSQLite.openDB('centralDeOfertas.db');
+                    console.log('corodvoa');
+                    try {
+                        db = $cordovaSQLite.openDB('central.db');
+                    } catch (er) {
+                        console.log(er.message);
+                    }
                 } else {
                     db = window.openDatabase("centralDeOfertas.db", "1.0", "Central de Ofertas", -1);
                 }
+
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `sales` (`id` INTEGER PRIMARY KEY,`title` VARCHAR(100) NULL,`type` VARCHAR(100) NULL,`category_id` INTEGER NULL,`brand_id` INTEGER NULL,`chain_id` INTEGER NULL,`manufacturer_id` INTEGER NULL,`filename` VARCHAR(100) NULL,`value` VARCHAR(20) NULL,`value_final` VARCHAR(20) NULL,`date_from` DATETIME NULL,`data_to` DATETIME NULL, `chain` VARCHAR (100) NULL)')
                         .then(function (res) {
-//                            console.log('sales table created', res);
+                            console.log('sales table created', res);
                         }, function (error) {
-//                            console.error(error);
+                            console.error(error);
                         });
+                console.log('todobienporaca');
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `brands` (`id` INTEGER NOT NULL PRIMARY KEY,`name` VARCHAR(100) NOT NULL)')
                         .then(function (res) {
-//                            console.log('brands table created', res);
+                            console.log('brands table created', res);
                         }, function (error) {
-//                            console.error(error);
+                            console.error(error);
                         });
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `chains` (`id` INTEGER NOT NULL PRIMARY KEY,`name` VARCHAR(100) NOT NULL)')
                         .then(function (res) {
-//                            console.log('chains table created', res);
+                            console.log('chains table created', res);
                         }, function (error) {
-//                            console.error(error);
+                            console.error(error);
                         });
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `categories` (`id` INTEGER NOT NULL PRIMARY KEY,`name` VARCHAR(100) NOT NULL)')
                         .then(function (res) {
-//                            console.log('categories table created', res);
+                            console.log('categories table created', res);
                         }, function (error) {
-//                            console.error(error);
+                            console.error(error);
                         });
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `favorites` (`id` INTEGER AUTO INCREMENT PRIMARY KEY,`sale_id` INTERGER NULL)')
                         .then(function (res) {
-//                            console.log('favorites table created', res);
+                            console.log('favorites table created', res);
                         }, function (error) {
-//                            console.error(error);
+                            console.error(error);
                         });
             });
         })

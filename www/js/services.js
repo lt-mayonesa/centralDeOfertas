@@ -9,9 +9,10 @@ angular.module('starter.services', [])
                 var q = $q.defer();
 
                 $ionicPlatform.ready(function () {
+			    console.log('database a');
                     $cordovaSQLite.execute(db, query, parameters)
                             .then(function (result) {
-//                                console.log('execute', result);
+                                //console.log('execute');
                                 q.resolve(result);
                             }, function (error) {
                                 console.warn('I found an error');
@@ -146,6 +147,7 @@ angular.module('starter.services', [])
                                 data[i].chain
                             ];
                             DBA.query("INSERT INTO sales VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", p);
+                            console.log('clone done!');
                         }
                     });
                     return true;
