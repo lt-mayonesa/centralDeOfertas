@@ -1,9 +1,10 @@
-/* global WS, angular, PRODUCTS, FAVORITES */
+/* global WS, angular, PRODUCTS, FAVORITES, Session */
 
 angular.module('starter.controllers', [])
 
-        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites) {
+        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites, $rootScope, Session, $ionicPlatform) {
             $scope.error = false;
+            $scope.networkState = Session.getConnStatus();
 //            $scope.products = Sales.all();
             $ionicModal.fromTemplateUrl('templates/loader.html', {scope: $scope}).then(function (modal) {
                 $scope.modal = modal;
@@ -20,25 +21,28 @@ angular.module('starter.controllers', [])
                 $scope.error = false;
                 $http.get(WS.getAll(WS.ALL_SALES)).success(function (response) {
                     Sales.clone(response.data);
-                    //Sales.clone(response.data);
-//                $scope.products = Sales.all();
                     Favorites.getFromLocal();
                     $http.get(WS.getTopFavorites()).success(function (response) {
                         $scope.favorites = Sales.favoritesByIds(response.data);
+                        Session.syncked();
                         $scope.modal.hide();
                     }).error(function (data, status) {
-//                        console.log(data, status);
                         $scope.error = true;
                         $scope.errorMsg = 'Error cargando el ranking.';
                     });
                 }).error(function (data, status) {
-//                    console.log(data, status);
                     $scope.error = true;
-                    $scope.errorMsg = 'Error de conexion desconocido.';
+                    if (Session.getConnStatus()) {
+                        $scope.errorMsg = 'Error de conexion desconocido.';
+                    } else {
+                        $scope.errorMsg = 'No estas conectado a una red. Las ofertas pueden estar desactualizadas.';
+                    }
                 });
             };
 
-            $scope.sync();
+            $ionicPlatform.ready(function () {
+                $scope.sync();
+            });
 
             $scope.searchSales = function (value) {
                 if (value.length >= 3) {
@@ -52,14 +56,23 @@ angular.module('starter.controllers', [])
             $scope.myFavoritesCount = function () {
                 return Favorites.all().length;
             };
-        })
-        .controller('ProductsCtrl', function ($scope, $http, Sales) {
+
+            $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+                Session.setConnStatus(false);
+                if (!Session.syncronized()) {
+                    $scope.error = false;
+                    $scope.modal.show();
+                    $scope.sync();
+                }
+            });
         })
 
         .controller('CategoriesCtrl', function ($scope, $http, $timeout, Categories) {
             $scope.loading = true;
             $http.get(WS.getAll(WS.ALL_CATEGORIES)).success(function (response) {
                 Categories.clone(response.data);
+            }).error(function () {
+                Categories.updateFromLocal();
             });
             $scope.$on('$ionicView.afterEnter', function (e) {
                 $timeout(function () {
@@ -72,6 +85,8 @@ angular.module('starter.controllers', [])
             $scope.loading = true;
             $http.get(WS.getAll(WS.ALL_CHAINS)).success(function (response) {
                 Chains.clone(response.data);
+            }).error(function () {
+                Chains.updateFromLocal();
             });
             $scope.$on('$ionicView.afterEnter', function (e) {
                 $timeout(function () {
@@ -94,7 +109,7 @@ angular.module('starter.controllers', [])
                 }, 1000);
             });
         })
-        .controller('CategoryListCtrl', function ($scope, $http, $stateParams, Sales, Categories) {
+        .controller('CategoryListCtrl', function ($scope, $stateParams, Sales, Categories) {
             $scope.loading = true;
             $scope.$on('$ionicView.afterEnter', function (e) {
                 var category = Categories.get($stateParams.id);
@@ -106,7 +121,7 @@ angular.module('starter.controllers', [])
 
 
         })
-        .controller('ChainListCtrl', function ($scope, $http, $stateParams, Sales, Chains) {
+        .controller('ChainListCtrl', function ($scope, $stateParams, Sales, Chains) {
             $scope.loading = true;
             $scope.$on('$ionicView.afterEnter', function (e) {
                 var category = Chains.get($stateParams.id);
@@ -116,7 +131,7 @@ angular.module('starter.controllers', [])
                 $scope.loading = false;
             });
         })
-        .controller('BrandListCtrl', function ($scope, $http, $timeout, $stateParams, Sales, Brands) {
+        .controller('BrandListCtrl', function ($scope, $timeout, $stateParams, Sales, Brands) {
             $scope.loading = true;
             $scope.$on('$ionicView.afterEnter', function (e) {
                 $timeout(function () {
@@ -156,7 +171,11 @@ angular.module('starter.controllers', [])
             $scope.fillName = false;
             $scope.fillEmail = false;
             $scope.fillMessage = false;
+            $scope.subscribes = false;
 
+            $scope.subscribeChange = function () {
+                $scope.subscribes = !$scope.subscribes;
+            };
             $scope.sendMessage = function (data) {
                 if (data == null) {
                     $scope.fillName = true;
@@ -179,7 +198,7 @@ angular.module('starter.controllers', [])
                 }
 
                 if (canSend) {
-                    $http.get(WS.sendMessage(data.name, data.message, data.mail)).success(function (data) {
+                    $http.get(WS.sendMessage(data.name, data.message, data.mail, $scope.subscribes)).success(function (data) {
                         var succesPopup = $ionicPopup.show({
                             title: 'Mensaje Enviado!',
                             subTitle: 'Gracias por enviarnos tu opinion',

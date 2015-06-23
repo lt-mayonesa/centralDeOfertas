@@ -66,17 +66,19 @@
         },
         "ion-item": {
             "attributes": {
-                "ng-show": {},
                 "collection-repeat": {},
                 "item-height": {},
-                "ng-animate": {},
-                "ng-switch-when": {},
                 "ng-click": {},
                 "ng-repeat": {},
-                "style": {},
-                "href": {},
-                "class": {},
                 "ng-hide": {},
+                "ng-show": {},
+                "ng-animate": {},
+                "ng-switch-when": {},
+                "style": {},
+                "nav-direction": {},
+                "href": {},
+                "nav-transition": {},
+                "class": {},
                 "ng-switch-default": {}
             }
         },

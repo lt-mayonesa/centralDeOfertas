@@ -7,7 +7,7 @@ var db = null;
 
 angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services'])
 
-        .run(function ($ionicPlatform, $cordovaSQLite) {
+        .run(function ($ionicPlatform, $cordovaSQLite, Session) {
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -20,7 +20,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
                 }
 
                 if (window.cordova) {
-                    console.log('corodvoa');
                     try {
                         db = $cordovaSQLite.openDB('central.db');
                     } catch (er) {
@@ -30,46 +29,54 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
                     db = window.openDatabase("centralDeOfertas.db", "1.0", "Central de Ofertas", -1);
                 }
 
+                Session.checkConnection();
+
+//                $ionicPlatform.on('backbutton', function (event) {
+//                    if ($ionicHistory.currentView().index == 0 && $ionicHistory.currentView().stateName != 'app.home') {
+//                        event.preventDefault();
+//                        $state.go('app.home');
+//                    }
+//                },100);
+
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `sales` (`id` INTEGER PRIMARY KEY,`title` VARCHAR(100) NULL,`type` VARCHAR(100) NULL,`category_id` INTEGER NULL,`brand_id` INTEGER NULL,`chain_id` INTEGER NULL,`manufacturer_id` INTEGER NULL,`filename` VARCHAR(100) NULL,`value` VARCHAR(20) NULL,`value_final` VARCHAR(20) NULL,`date_from` DATETIME NULL,`data_to` DATETIME NULL, `chain` VARCHAR (100) NULL)')
                         .then(function (res) {
-                            console.log('sales table created', res);
+//                            console.log('sales table created', res);
                         }, function (error) {
-                            console.error(error);
+//                            console.error(error);
                         });
-                console.log('todobienporaca');
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `brands` (`id` INTEGER NOT NULL PRIMARY KEY,`name` VARCHAR(100) NOT NULL)')
                         .then(function (res) {
-                            console.log('brands table created', res);
+//                            console.log('brands table created', res);
                         }, function (error) {
-                            console.error(error);
+//                            console.error(error);
                         });
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `chains` (`id` INTEGER NOT NULL PRIMARY KEY,`name` VARCHAR(100) NOT NULL)')
                         .then(function (res) {
-                            console.log('chains table created', res);
+//                            console.log('chains table created', res);
                         }, function (error) {
-                            console.error(error);
+//                            console.error(error);
                         });
-                $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `categories` (`id` INTEGER NOT NULL PRIMARY KEY,`name` VARCHAR(100) NOT NULL)')
+/*                        $cordovaSQLite.execute(db, 'DROP TABLE IF EXISTS `categories`').then(function (res) {
+                            console.log('dropped');
+                        }, function (er) {
+                            console.log(er);
+                        });*/
+                $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `categories` (`id` INTEGER NOT NULL PRIMARY KEY UNIQUE,`name` VARCHAR(100) NOT NULL)')
                         .then(function (res) {
-                            console.log('categories table created', res);
+//                            console.log('categories table created', res);
                         }, function (error) {
-                            console.error(error);
+//                            console.error(error);
                         });
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `favorites` (`id` INTEGER AUTO INCREMENT PRIMARY KEY,`sale_id` INTERGER NULL)')
                         .then(function (res) {
-                            console.log('favorites table created', res);
+//                            console.log('favorites table created', res);
                         }, function (error) {
-                            console.error(error);
+//                            console.error(error);
                         });
             });
         })
 
         .config(function ($stateProvider, $urlRouterProvider) {
-
-            // Ionic uses AngularUI Router which uses the concept of states
-            // Learn more here: https://github.com/angular-ui/ui-router
-            // Set up the various states which the app can be in.
-            // Each state's controller can be found in controllers.js
             $stateProvider
                     .state('app', {
                         url: '/app',
@@ -166,33 +173,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
                             }
                         }
                     });
-//                    // setup an abstract state for the tabs directive
-//                    .state('tab', {
-//                        url: "/tab",
-//                        abstract: true,
-//                        templateUrl: "templates/tabs.html"
-//                    })
-//
-//                    .state('tab.categories', {
-//                        url: '/categories',
-//                        views: {
-//                            'tab-categories': {
-//                                templateUrl: 'templates/tab-categories.html',
-//                                controller: 'CategoriesCtrl'
-//                            }
-//                        }
-//                    })
-//                    .state('tab.categorie-list', {
-//                        url: '/categories/:type/:id',
-//                        views: {
-//                            'tab-categories': {
-//                                templateUrl: 'templates/categorie-list.html',
-//                                controller: 'CategorieListCtrl'
-//                            }
-//                        }
-//                    })
-//
-//            // if none of the above states are matched, use this as the fallback
             $urlRouterProvider.otherwise('/app/home');
 
         })

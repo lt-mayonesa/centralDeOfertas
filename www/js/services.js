@@ -1,15 +1,48 @@
 /* global, angular, CHAINS */
 
 angular.module('starter.services', [])
+        .factory('Session', function ($ionicPlatform, $cordovaNetwork) {
+            var sync = false;
+            var online = true;
+
+            return {
+                syncked: function () {
+                    sync = true;
+                },
+                syncronized: function () {
+                    return sync;
+                },
+                getConnStatus: function () {
+                    return online;
+                },
+                setConnStatus: function (bool) {
+                    online = bool;
+                },
+                checkConnection: function () {
+                    $ionicPlatform.ready(function () {
+                        if (window.cordova) {
+                            try {
+                                online = $cordovaNetwork.isOnline();
+                                return true;
+                            } catch (error) {
+//                                console.log(error.message);
+                                return false;
+                            }
+                        }
+                    });
+                }
+            };
+        })
 
         .factory('DBA', function ($cordovaSQLite, $q, $ionicPlatform) {
+            var remaining = [];
             var self = this;
+            
             self.query = function (query, parameters) {
                 parameters = parameters || [];
                 var q = $q.defer();
 
                 $ionicPlatform.ready(function () {
-			    console.log('database a');
                     $cordovaSQLite.execute(db, query, parameters)
                             .then(function (result) {
                                 //console.log('execute');
@@ -39,7 +72,7 @@ angular.module('starter.services', [])
                 output = angular.copy(result.rows.item(0));
                 return output;
             };
-
+            
             return self;
         })
         .factory('Favorites', function ($http, DBA, Sales) {
@@ -107,7 +140,7 @@ angular.module('starter.services', [])
             };
 
         })
-        .factory('Sales', function ($rootScope,DBA) {
+        .factory('Sales', function ($rootScope, DBA) {
             var products = [];
             return {
                 all: function () {
@@ -130,24 +163,23 @@ angular.module('starter.services', [])
                 clone: function (data) {
                     products = data;
                     DBA.query("DELETE FROM sales").then(function (res) {
-                        for (var i = 0; i < data.length; i++) {
+                        for (var i = 0; i < products.length; i++) {
                             var p = [
-                                data[i].id,
-                                data[i].title,
-                                data[i].type,
-                                data[i].category_id,
-                                data[i].brand_id,
-                                data[i].chain_id,
-                                data[i].manufacturer_id,
-                                data[i].filename,
-                                data[i].value,
-                                data[i].value_final,
-                                data[i].date_from,
-                                data[i].date_to,
-                                data[i].chain
+                                products[i].id,
+                                products[i].title,
+                                products[i].type,
+                                products[i].category_id,
+                                products[i].brand_id,
+                                products[i].chain_id,
+                                products[i].manufacturer_id,
+                                products[i].filename,
+                                products[i].value,
+                                products[i].value_final,
+                                products[i].date_from,
+                                products[i].date_to,
+                                products[i].chain
                             ];
                             DBA.query("INSERT INTO sales VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", p);
-                            console.log('clone done!');
                         }
                     });
                     return true;
@@ -243,6 +275,28 @@ angular.module('starter.services', [])
                         var data = DBA.getAll(result);
                         products = data;
                         $rootScope.$broadcast('finishSales');
+                    });
+                },
+                persistData: function () {
+                    DBA.query("DELETE FROM sales").then(function (res) {
+                        for (var i = 0; i < products.length; i++) {
+                            var p = [
+                                products[i].id,
+                                products[i].title,
+                                products[i].type,
+                                products[i].category_id,
+                                products[i].brand_id,
+                                products[i].chain_id,
+                                products[i].manufacturer_id,
+                                products[i].filename,
+                                products[i].value,
+                                products[i].value_final,
+                                products[i].date_from,
+                                products[i].date_to,
+                                products[i].chain
+                            ];
+                            DBA.query("INSERT INTO sales VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", p);
+                        }
                     });
                 }
             };

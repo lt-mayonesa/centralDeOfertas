@@ -113,9 +113,9 @@ var WS = {
             return false;
         }
     },
-    sendMessage: function (name, message, email, format) {
+    sendMessage: function (name, message, email, subs, format) {
         var f = format || 'json';
-        return WS.BASE_URL + WS.format[f] + WS.SEND_MESSAGE + '&name=' + name + '&mail=' + email + '&message=' + message;
+        return WS.BASE_URL + WS.format[f] + WS.SEND_MESSAGE + '&n=' + name + '&m=' + email + '&ms=' + message + '&s=' + subs;
     }
 
 };

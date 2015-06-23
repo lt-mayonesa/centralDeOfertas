@@ -1,7 +1,23 @@
 <h3 class="flat-title title-blue">Top 5</h3>
 <div class="favorites-list" ng-controller="SalesListCtrl">
-    <ion-item class="item-favorite-min" ng-repeat="favorite in favorites">
-        <p>{{favorite.title}}</p>
-        <span class="badge badge-royal side-badge">{{favorite.totalFavs}}</span>
+    <ion-item ng-show="favorites[0]" class="item-favorite-min">
+        <p>{{favorites[0].title}}</p>
+        <span class="badge badge-royal side-badge">{{favorites[0].totalFavs}}</span>
+    </ion-item>
+    <ion-item ng-show="favorites[1]" class="item-favorite-min">
+        <p>{{favorites[1].title}}</p>
+        <span class="badge badge-royal side-badge">{{favorites[1].totalFavs}}</span>
+    </ion-item>
+    <ion-item ng-show="favorites[2]" class="item-favorite-min">
+        <p>{{favorites[2].title}}</p>
+        <span class="badge badge-royal side-badge">{{favorites[2].totalFavs}}</span>
+    </ion-item>
+    <ion-item ng-show="favorites[3]" class="item-favorite-min">
+        <p>{{favorites[3].title}}</p>
+        <span class="badge badge-royal side-badge">{{favorites[3].totalFavs}}</span>
+    </ion-item>
+    <ion-item ng-show="favorites[4]" class="item-favorite-min">
+        <p>{{favorites[4].title}}</p>
+        <span class="badge badge-royal side-badge">{{favorites[4].totalFavs}}</span>
     </ion-item>
 </div>

@@ -24,8 +24,8 @@
 }
 
 .place-badge {
-    border-radius: 10px;
-    padding: 0px 10px 2px;
+    /*border-radius: 10px;*/
+    padding: 2px 10px 1px;
     line-height: 24px;
     float: left;
 }
@@ -67,13 +67,16 @@
 
 .item-prize {
     background-color: rgba(255, 120, 73,0.2);
-    border-radius: 10px;
+    /*border-radius: 10px;*/
     padding: 0;
     padding-right: 10px;
     line-height: 26px;
     margin: 0;
     margin-top: 8px;
     text-align: right;
+}
+.item-prize strong {
+    font-size: 16px;
 }
 
 .item-favorite {
@@ -103,6 +106,47 @@
     margin: 0 2px;
 }
 .item-favorite-min {
-    margin: 5px 0;
+    margin: 7px 0px;
     border-top: 2px dotted #444;
+}
+.item-favorite-min p {
+    width: 86%;
+}
+.item-favorite-min.ranking-gold {
+    border-top-width: 3px;
+    background-color: gold;
+    margin: 7px 0;
+}
+.item-favorite-min.ranking-gold p {
+    color: #111;
+    text-shadow: 1px 1px 1px goldenrod;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: bold;
+}
+.item-favorite-min.ranking-silver {
+    background-color: silver;
+    margin: 7px 4px;
+}
+.item-favorite-min.ranking-silver p {
+    color: #222;
+    text-shadow: 1px 1px 1px grey;
+}
+.item-favorite-min.ranking-bronce {
+    background-color: #B87333;
+    margin: 7px;
+}
+.item-favorite-min.ranking-bronce p {
+    color: #f0f0f0;
+}
+.label-padding {
+    background-color: #fff;
+    padding: 0px 10;
+    margin: 10px 5px;
+}
+.form-alert {
+    background-color: #E63B00;
+    display: block;
+    color: white;
+    padding-left: 10px;
 }
