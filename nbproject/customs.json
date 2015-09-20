@@ -18,7 +18,12 @@
                 "icon-on": {}
             }
         },
-        "ion-nav-back-button": {},
+        "ion-nav-back-button": {
+            "attributes": {
+                "ng-click": {},
+                "style": {}
+            }
+        },
         "ion-content": {
             "attributes": {
                 "ng-include": {},
@@ -120,6 +125,9 @@
     "attributes": {
         "menu-toggle": {
             "context": "button"
+        },
+        "collection-repeat": {
+            "context": "div"
         },
         "menu-close": {
             "context": "a"

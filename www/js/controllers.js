@@ -1,12 +1,12 @@
 /* global WS, angular, PRODUCTS, FAVORITES, Session */
 
-angular.module('starter.controllers', [])
+angular.module('app.controllers', [])
 
-        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites, $rootScope, Session, $ionicPlatform) {
+        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites, DataHandler, $rootScope, Session, $ionicPlatform) {
             $scope.error = false;
             $scope.networkState = Session.getConnStatus();
 //            $scope.products = Sales.all();
-            $ionicModal.fromTemplateUrl('templates/loader.html', {scope: $scope}).then(function (modal) {
+            $ionicModal.fromTemplateUrl('templates/loader.html', {scope: $scope, hardwareBackButtonClose: false}).then(function (modal) {
                 $scope.modal = modal;
                 $scope.modal.show();
             });
@@ -17,15 +17,27 @@ angular.module('starter.controllers', [])
                     $scope.modal.hide();
                 });
             };
+            $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
+                            $scope.singInModal = modal;
+                            $scope.singInModal.show();
+                        });
             $scope.sync = function () {
+                //esto funciona?
+                DataHandler.loadDataFromLocal();
+                
                 $scope.error = false;
-                $http.get(WS.getAll(WS.ALL_SALES)).success(function (response) {
+                /*$http.get(WS.getAll(WS.ALL_SALES)).success(function (response) {
                     Sales.clone(response.data);
                     Favorites.getFromLocal();
                     $http.get(WS.getTopFavorites()).success(function (response) {
                         $scope.favorites = Sales.favoritesByIds(response.data);
                         Session.syncked();
                         $scope.modal.hide();
+                        $scope.modal.remove();
+                        $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
+                            $scope.singInModal = modal;
+                            $scope.singInModal.show();
+                        });
                     }).error(function (data, status) {
                         $scope.error = true;
                         $scope.errorMsg = 'Error cargando el ranking.';
@@ -37,7 +49,7 @@ angular.module('starter.controllers', [])
                     } else {
                         $scope.errorMsg = 'No estas conectado a una red. Las ofertas pueden estar desactualizadas.';
                     }
-                });
+                });*/
             };
 
             $ionicPlatform.ready(function () {
@@ -151,21 +163,26 @@ angular.module('starter.controllers', [])
             $scope.products = Favorites.all();
         })
 
-        .controller('SalesListCtrl', function ($scope, $ionicPopup, Favorites, Sales) {
+        .controller('SalesListCtrl', function ($scope, $ionicPopup, $ionicModal, Favorites, Sales, Brands, Categories) {
+            $scope.detailModal = null;
             $scope.addFavorite = function (id) {
                 Favorites.add(id);
             };
             $scope.showPopup = function (id) {
                 $scope.sale = Sales.get(id);
-                var detailPopup = $ionicPopup.show({
-                    title: $scope.sale.title,
-                    templateUrl: 'templates/sale-detail.html',
-                    scope: $scope,
-                    buttons: [
-                        {text: 'Aceptar', type: 'button-stable'}
-                    ]
+                $scope.sale.brand = Brands.get($scope.sale.brand_id).name;
+                $scope.sale.category = Categories.get($scope.sale.category_id).name;
+                $ionicModal.fromTemplateUrl('templates/sale-detail.html', {scope: $scope, animation: 'slide-in-right'}).then(function (modal) {
+                    $scope.detailModal = modal;
+                    $scope.detailModal.show();
                 });
             };
+            $scope.closeModal = function () {
+                $scope.detailModal.hide();
+            };
+            $scope.$on('$destroy', function () {
+                $scope.detailModal.remove();
+            });
         })
         .controller('ContactCtrl', function ($scope, $http, $ionicPopup) {
             $scope.fillName = false;
@@ -217,4 +234,61 @@ angular.module('starter.controllers', [])
                     });
                 }
             };
+        })
+        /**
+         * Sing In Contrller.
+         * 
+         * Handles al user Input data to app
+         * 
+         */
+        .controller('SingInCtrl', function ($scope, User) {
+            $scope.user = User.get();
+            console.log($scope.user);
+            $scope.fillFirstName = false;
+            $scope.fillLastName = false;
+            $scope.fillWork = false;
+            $scope.fillEmail = false;
+            $scope.fillAdress = false;
+            $scope.fillPhone = false;
+            
+            $scope.userCountryCode = 54;
+
+            $scope.singIn = function (data) {
+                console.log('data', data);
+                if (data == null) {
+                    $scope.fillFirstName = true;
+                    $scope.fillLastName = true;
+                    $scope.fillWork = true;
+                    $scope.fillEmail = true;
+                    $scope.fillAdress = true;
+                    $scope.fillPhone = true;
+                    return false;
+                } else {
+                    if (data.firstName != null)
+                        $scope.user.firstName = data.firstName;
+                    if (data.lastName != null)
+                        $scope.user.lastName = data.lastName;
+                    if (data.work != null)
+                        $scope.user.work = data.work;
+                    if (data.email != null)
+                        $scope.user.email = data.email;
+                    if (data.adress != null)
+                        $scope.user.adress = data.adress;
+                    if (data.phone != null)
+                        $scope.user.phone = data.cCode + data.phone;
+                    
+                    console.log('User final', $scope.user);
+                    User.set($scope.user);
+                    return true;
+                }
+            };
+
+            $scope.closeModal = function () {
+                $scope.singInModal.hide();
+            };
+            
+            $scope.$on('singInModal.hidden', function (e) {
+                console.log(e);
+            });
+
         });

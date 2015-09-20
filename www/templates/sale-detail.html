@@ -1,7 +1,54 @@
-<div>
-    <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{sale.filename | checkImgExtension}}" onerror="this.onerror=null;this['src']='img/default_product.gif';" style="display: block; margin: 0 auto 10px;"/>
-    <p class="badge badge-assertive">{{sale.chain}}</p>
-    <p>{{sale.type}}</p>
-    <p><strong>{{sale.value}}</strong></p>
-    <p><strong><em>{{sale.value_final}}</em></strong></p>
-</div>
+<ion-modal-view style="background-color: #f3f3f3">
+    <ion-nav-bar class="bar-energized header-shadow">
+        <ion-nav-back-button ng-click="closeModal()" style="display: block;"></ion-nav-back-button>
+        <ion-nav-buttons side="right">
+            <button class="button button-icon ion-heart" ng-click="addFavorite(sale.id)" ng-class="{'favorite-red': sale.favorite, 'favorite-grey': !sale.favorite}"></button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-content>
+        <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{sale.filename| checkImgExtension}}" onerror="this.onerror=null;this['src']='img/default_product.gif';" style="display: block; width: 100%; margin: 0 auto 10px;"/>
+        <div class="card padding">
+            <h2>{{sale.title}}</h2>
+            <div class="card">
+                <div>
+                    <ion-item class="item-divider">Cadena</ion-item>
+                    <ion-item class="item-text-wrap">
+                        <p>{{sale.chain}}</p>
+                    </ion-item>
+                </div>
+                <div>
+                    <ion-item class="item-divider">Tipo de descuento</ion-item>
+                    <ion-item class="item-text-wrap">
+                        <p>{{sale.type}}</p>
+                    </ion-item>
+                </div>
+                <div>
+                    <ion-item class="item-divider">Valor</ion-item>
+                    <ion-item class="item-text-wrap">
+                        <p><strong>{{sale.value}}</strong></p>
+                    </ion-item>
+                </div>
+                <div>
+                    <ion-item class="item-divider">Valor final</ion-item>
+                    <ion-item class="item-text-wrap">
+                        <p><strong><em>{{sale.value_final}}</em></strong></p>
+                    </ion-item>
+                </div>
+                <div>
+                    <ion-item class="item-divider">Marca</ion-item>
+                    <ion-item class="item-text-wrap">
+                        <p><strong><em>{{sale.brand}}</em></strong></p>
+                    </ion-item>
+                </div>
+                <div>
+                    <ion-item class="item-divider">Categoria</ion-item>
+                    <ion-item class="item-text-wrap">
+                        <p><strong><em>{{sale.category}}</em></strong></p>
+                    </ion-item>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>
+<script>
+</script>

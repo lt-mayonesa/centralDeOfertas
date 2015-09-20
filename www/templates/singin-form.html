@@ -1,0 +1,81 @@
+<ion-modal-view ng-controller="SingInCtrl">
+    <ion-nav-bar>
+        <ion-nav-back-button ng-click="closeModal()" style="display: block;"></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content class="padding">
+        <div ng-hide="disclaimerRead" class="text-alert" style="margin-top: 30px;">
+            <h2>Información Personal</h2>
+            <div ng-hide="user.firstName">
+                <p class="greeting" ng-hide="greeting">Hola!</p>
+                <p>Te pedimos por favor que completes el siguiente formulario para que puedas disfrutar <strong>Central de Ofertas</strong> en todo su potencial.</p>
+            </div>
+            <div ng-show="user.firstName">
+                <p class="greeting" ng-hide="greeting">Hola {{ user.firstName }}!</p>
+                <p>Para ponernos en contacto vamos a necesitar algunos datos mas de tu parte.</p>
+            </div>
+        </div>
+        <form ng-submit="singIn(data)" style="padding-bottom: 40px;">
+            <ion-list class="list card">
+                <div ng-hide="user.firstName" class="label-padding">
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">Nombre</span>
+                        <input ng-click="fillName = false" type="text" placeholder="Nombre" ng-model="data.firstName">
+                    </label>
+                    <span class="form-alert" ng-show="fillFirstName">Por favor ingrese su nombre</span>
+                </div>
+                <div ng-hide="user.lastName" class="label-padding">
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">Apellido</span>
+                        <input ng-click="fillName = false" type="text" placeholder="Apellido" ng-model="data.lastName">
+                    </label>
+                    <span class="form-alert" ng-show="fillLastName">Por favor ingrese su apellido</span>
+                </div>
+                <div ng-hide="user.work" class="label-padding">
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">Rubro</span>
+                        <input ng-click="fillWork = false" type="text" placeholder="Kiosquiero, Almacenero, etc" ng-model="data.work">
+                    </label>
+                    <span class="form-alert" ng-show="fillWork">Por favor ingrese su rubro</span>
+                </div>
+                <div ng-hide="user.email" class="label-padding">
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">Mail</span>
+                        <input ng-click="fillEmail = false" type="email" placeholder="Mail" ng-model="data.email">
+                    </label>
+                    <span class="form-alert" ng-show="fillEmail">Por favor ingrese un email</span>
+                </div>
+                <div ng-hide="user.adress" class="label-padding">
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">Dirección</span>
+                        <input ng-click="fillAdress = false" type="text" placeholder="Direcci&oacute;n" ng-model="data.adress">
+                    </label>
+                    <span class="form-alert" ng-show="fillAdress">Por favor ingrese su dirección</span>
+                </div>
+                <div ng-hide="user.phone" class="row">
+                    <div class="col">
+                        <div class="label-padding">
+                            <label class="item item-input item-stacked-label">
+                                <span class="input-label" style="margin-left: -15px;">Cod.(54)</span>
+                                <input ng-click="fillCCode = false" type="text" placeholder="+54" value="+54" ng-model="data.cCode" style="padding: 0;">
+                            </label>
+                            <span class="form-alert" ng-show="fillCCode">Por favor ingrese un codigo de pais valido</span>
+                        </div>
+                    </div>
+                    <div class="col col-75">
+                        <div class="label-padding">
+                            <label class="item item-input item-stacked-label">
+                                <span class="input-label">Telefono</span>
+                                <input ng-click="fillPhone = false" type="text" placeholder="11-2165-XXXX" ng-model="data.phone">
+                            </label>
+                            <span class="form-alert" ng-show="fillPhone">Por favor ingrese su telefono/celular</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_singin_submit" class="button button-block button-positive" style="display: none;" type="submit">Enviar</button>
+            </ion-list>
+        </form>
+    </ion-content>
+    <div class="bar bar-footer" style="height: 70px;">
+        <button class="button button-block button-positive" onclick="document.getElementById('btn_singin_submit').click();">Guardar</button>
+    </div>
+</ion-modal-view>

@@ -5,10 +5,11 @@
 
 var db = null;
 
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services'])
+angular.module('app', ['ionic', 'ngCordova', 'app.controllers', 'app.services', 'app.utils'])
 
-        .run(function ($ionicPlatform, $cordovaSQLite, Session) {
+        .run(function ($ionicPlatform, $cordovaSQLite, $localStorage, Session) {
             $ionicPlatform.ready(function () {
+                console.log($localStorage.getObject('user'));
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
                 if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -31,13 +32,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
                 Session.checkConnection();
 
-//                $ionicPlatform.on('backbutton', function (event) {
-//                    if ($ionicHistory.currentView().index == 0 && $ionicHistory.currentView().stateName != 'app.home') {
-//                        event.preventDefault();
-//                        $state.go('app.home');
-//                    }
-//                },100);
-
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `sales` (`id` INTEGER PRIMARY KEY,`title` VARCHAR(100) NULL,`type` VARCHAR(100) NULL,`category_id` INTEGER NULL,`brand_id` INTEGER NULL,`chain_id` INTEGER NULL,`manufacturer_id` INTEGER NULL,`filename` VARCHAR(100) NULL,`value` VARCHAR(20) NULL,`value_final` VARCHAR(20) NULL,`date_from` DATETIME NULL,`data_to` DATETIME NULL, `chain` VARCHAR (100) NULL)')
                         .then(function (res) {
 //                            console.log('sales table created', res);
@@ -56,11 +50,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
                         }, function (error) {
 //                            console.error(error);
                         });
-/*                        $cordovaSQLite.execute(db, 'DROP TABLE IF EXISTS `categories`').then(function (res) {
-                            console.log('dropped');
-                        }, function (er) {
-                            console.log(er);
-                        });*/
                 $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS `categories` (`id` INTEGER NOT NULL PRIMARY KEY UNIQUE,`name` VARCHAR(100) NOT NULL)')
                         .then(function (res) {
 //                            console.log('categories table created', res);
@@ -180,7 +169,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         .filter('checkImgExtension', function () {
             return function (text) {
                 var str = text;
-                if (text.search(/.png/i) === -1) {
+                if (text != null && text.search(/.png/i) === -1) {
                     str = text + '.png';
                 }
                 return str;

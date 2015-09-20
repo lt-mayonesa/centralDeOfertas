@@ -1,8 +1,11 @@
 <div ng-repeat="product in products">
     <div class="item-favorite">
-        <h2 class="item item-button-right">{{product.title}}<button class="button button-icon ion-android-remove-circle" ng-click="removeFav(product.id)"></button></h2>
+        <h2 class="item item-button-right">
+            {{product.title}}
+            <button class="button button-icon ion-android-remove-circle" ng-click="removeFav(product.id)"></button>
+        </h2>
         <div class="item item-thumbnail-right">
-            <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{product.filename | checkImgExtension}}" alt="img" onerror="this.onerror=null;this['src']='img/default_product.gif';" />
+            <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{product.filename| checkImgExtension}}" alt="img" onerror="this.onerror=null;this['src']='img/default_product.gif';" />
             <p>{{product.type}}</p>
             <p>{{product.value}}</p>
             <p class="place-badge style-assertive">{{product.chain}}</p>

@@ -1,6 +1,5 @@
-/* global, angular, CHAINS */
-
-angular.module('starter.services', [])
+/* global angular, CHAINS */
+angular.module('app.services', [])
         .factory('Session', function ($ionicPlatform, $cordovaNetwork) {
             var sync = false;
             var online = true;
@@ -37,7 +36,7 @@ angular.module('starter.services', [])
         .factory('DBA', function ($cordovaSQLite, $q, $ionicPlatform) {
             var remaining = [];
             var self = this;
-            
+
             self.query = function (query, parameters) {
                 parameters = parameters || [];
                 var q = $q.defer();
@@ -72,8 +71,76 @@ angular.module('starter.services', [])
                 output = angular.copy(result.rows.item(0));
                 return output;
             };
-            
+
             return self;
+        })
+        .factory('User', function ($localStorage) {
+            this.user = {
+                firstName: null,
+                lastName: null,
+                work: null,
+                adress: null,
+                email: null,
+                phone: null,
+                lastLogin: null
+            };
+
+            return {
+                get: function () {
+                    user = $localStorage.getObject('user') || {};
+                    return user;
+                },
+                set: function (user) {
+                    $localStorage.setObject('user', user);
+                    return true;
+                },
+                /**
+                 * 
+                 * @param {String} fn user new First Name
+                 * @param {String} ln user new Last Name
+                 * @param {String} w user new Work
+                 * @param {String} a user new Adress {optional}
+                 * @param {String} e user new Email {optional}
+                 * @param {String} p user new Phone numbre {optional}
+                 * @returns {Boolean}
+                 */
+                populate: function (fn, ln, w, a, e, p) {
+                    if (fn == null || fn == '') {
+                        throw 'firstname cant be empty';
+                        return false;
+                    }
+                    if (ln == null || ln == '') {
+                        throw 'lastname cant be empty';
+                        return false;
+                    }
+                    if (w == null || w == '') {
+                        throw 'work cant be empty';
+                        return false;
+                    }
+                    if (a == '') {
+                        throw 'adress cant be empty';
+                        return false;
+                    }
+                    if (e == '' || e.indexOf('@') == -1) {
+                        throw 'email cant be empty and must be email type';
+                        return false;
+                    }
+                    if (p == '') {
+                        throw 'phone cant be empty';
+                        return false;
+                    }
+
+                    user.firstName = fn;
+                    user.lastName = ln;
+                    user.work = w;
+                    user.adress = a;
+                    user.email = e;
+                    user.phone = p;
+                    //store user
+                    $localStorage.setObject('user', user);
+                    return user;
+                }
+            };
         })
         .factory('Favorites', function ($http, DBA, Sales) {
             var favorites = [];
@@ -456,6 +523,18 @@ angular.module('starter.services', [])
                             DBA.query("INSERT INTO brands VALUES (?,?)", p);
                         }
                     });
+                    return true;
+                }
+            };
+        })
+
+        .factory('DataHandler', function (Sales, Categories, Brands, Chains) {
+            return {
+                loadDataFromLocal: function () {
+                    Sales.updateFromLocal();
+                    Categories.updateFromLocal();
+                    Brands.updateFromLocal();
+                    Chains.updateFromLocal();
                     return true;
                 }
             };
