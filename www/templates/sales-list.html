@@ -3,7 +3,7 @@
     <div class="salesItem" collection-repeat="product in products | orderBy: 'title'">
         <h2 class="item item-button-right">
             {{product.title}}
-            <button class="button button-icon ion-heart" ng-click="addFavorite(product.id)" ng-class="{'favorite-red': product.favorite, 'favorite-grey': !product.favorite}"></button>
+            <button class="button button-icon ion-bookmark" ng-click="addFavorite(product.id)" ng-class="{'is-favorite': product.favorite, 'isnot-favorite': !product.favorite}"></button>
         </h2>
         <ion-item class="item item-thumbnail-left" ng-click="showPopup(product.id)" style="padding-top: 16px;">
             <!--<i ng-show="product.favorite" class="icon ion-android-done tick-favorite" ></i>-->

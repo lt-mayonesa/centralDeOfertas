@@ -155,11 +155,11 @@
     box-sizing: border-box;
 }
 
-.favorite-red {
-    color: red !important;
+.is-favorite {
+    color: goldenrod !important;
 }
 
-.favorite-grey {
+.isnot-favorite {
     color: #ccc !important;
 }
 
@@ -211,6 +211,15 @@
 
 .salesItem {
     margin: 10px 0px;
+    padding: 10px;
+}
+.salesItem h2 {
+    border-left: 2px solid #66ccff;
+}
+
+.salesItem h2 button {
+    font-size: 50px !important;
+    margin-top: -16px;
 }
 
 .bottom-button-container {

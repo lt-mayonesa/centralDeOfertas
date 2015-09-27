@@ -156,6 +156,8 @@ angular.module('app.controllers', [])
         })
 
         .controller('FavoritesCtrl', function ($scope, $ionicPopup, $customPopups, $ionicModal, $http, Favorites, User) {
+            var user = User.get();
+            $scope.knowsOrderUp = user.knowsOrderUp ? true : false;
             $scope.removeFav = function (id) {
                 Favorites.remove(id);
             };
@@ -174,8 +176,11 @@ angular.module('app.controllers', [])
                     }
                 });
             };
+            $scope.learnOrderUp = function () {
+                $scope.knowsOrderUp = !$scope.knowsOrderUp;
+                console.log($scope.knowsOrderUp);
+            };
             $scope.orderUp = function () {
-                var user = User.get();
                 if (Object.keys(user).length < 0 || user.email == '' || user.email == null) {
                     $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
                         $scope.orderUpWaiting = true;
@@ -184,11 +189,35 @@ angular.module('app.controllers', [])
                     });
                     return false;
                 }
-                $http.get(WS.sendOrder(User.toUrl(true), Favorites.toUrl(true))).success(function (data) {
-                    $customPopups.messageSend('Gracias, prontamente nos pondremos en contacto contigo');
-                }).error(function (data, status, headers) {
-                    $customPopups.connectionError();
-                });
+                if (!user.knowsOrderUp) {
+                    var orderUpConfirm = $ionicPopup.confirm({
+                        title: 'Pedido',
+                        scope: $scope,
+                        templateUrl: 'templates/confirm-popup.html',
+                        cancelText: 'No',
+                        okText: 'Si',
+                        okType: 'button-balanced'
+                    });
+                    orderUpConfirm.then(function (res) {
+                        if (res) {
+                            user.knowsOrderUp = $scope.knowsOrderUp;
+                            User.set(user);
+                            $http.get(WS.sendOrder(User.toUrl(true), Favorites.toUrl(true))).success(function (data) {
+                                $customPopups.messageSend('Gracias!, prontamente nos pondremos en contacto contigo');
+                            }).error(function (data, status, headers) {
+                                $customPopups.connectionError();
+                            });
+                        } else {
+                            return false;
+                        }
+                    });
+                } else {
+                    $http.get(WS.sendOrder(User.toUrl(true), Favorites.toUrl(true))).success(function (data) {
+                        $customPopups.messageSend('Gracias!, prontamente nos pondremos en contacto contigo');
+                    }).error(function (data, status, headers) {
+                        $customPopups.connectionError();
+                    });
+                }
             };
             $scope.products = Favorites.all();
         })
@@ -230,7 +259,6 @@ angular.module('app.controllers', [])
                 $scope.subscribes = !$scope.subscribes;
             };
             $scope.sendMessage = function (info) {
-                console.log('mesanansdfasd', info);
                 if (info == null) {
                     $scope.fillName = true;
                     $scope.fillEmail = true;
@@ -239,22 +267,18 @@ angular.module('app.controllers', [])
                 }
                 var canSend = true;
                 if (info.email == null || info.email == '') {
-                    console.log('mail null');
                     canSend = false;
                     $scope.fillEmail = true;
                 }
                 if (info.firstName == null || info.firstName == '') {
-                    console.log('mail name');
                     canSend = false;
                     $scope.fillName = true;
                 }
                 if (info.message == null || info.message == '') {
-                    console.log('msg null');
                     canSend = false;
                     $scope.fillMessage = true;
                 }
 
-                console.log(canSend);
                 if (canSend) {
                     $http.get(WS.sendMessage(info.firstName, info.message, info.mail, $scope.subscribes)).success(function (data) {
                         $customPopups.messageSend('Gracias por enviarnos tu opinion');
@@ -308,6 +332,7 @@ angular.module('app.controllers', [])
                         $scope.userCountryCode = data.cCode;
                     if (data.phone != null)
                         $scope.user.phone = $scope.userCountryCode + data.phone;
+
                     User.set($scope.user);
                     $scope.singInModal.hide();
                     if ($scope.orderUpWaiting) {

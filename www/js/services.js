@@ -210,8 +210,12 @@ angular.module('app.services', [])
                     DBA.query("DELETE FROM favorites WHERE sale_id = (?)", p);
                 },
                 removeAll: function () {
+                    var sales = Sales.all();
                     console.log('removing all..');
                     DBA.query('DELETE FROM favorites').then(function () {
+                        for (var i = 0; i < favorites.length; i++) {
+                            sales[sales.findKeyBy('id', parseInt(favorites[i].id))].favorite = false;
+                        }
                         favorites.splice(0, favorites.length);
                         console.log('DELETED ALL FAVORITES');
                         return true;
