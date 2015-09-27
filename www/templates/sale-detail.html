@@ -5,9 +5,9 @@
             <button class="button button-icon ion-heart" ng-click="addFavorite(sale.id)" ng-class="{'favorite-red': sale.favorite, 'favorite-grey': !sale.favorite}"></button>
         </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-content>
-        <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{sale.filename| checkImgExtension}}" onerror="this.onerror=null;this['src']='img/default_product.gif';" style="display: block; width: 100%; margin: 0 auto 10px;"/>
-        <div class="card padding">
+    <ion-content class="padding">
+        <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{sale.filename| checkImgExtension}}" onerror="this.onerror=null;this['src']='img/default_product.gif';" style="display: block; width: 100%; margin: 40px auto 10px;"/>
+        <div class="text-alert padding">
             <h2>{{sale.title}}</h2>
             <div class="card">
                 <div>

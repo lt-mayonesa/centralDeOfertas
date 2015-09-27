@@ -1,6 +1,20 @@
 <ion-view view-title="Mi Lista">
+    <ion-nav-buttons side="right">
+        <button ng-show="products.length > 0" class="button button-icon ion-android-delete" ng-click="removeAll();"></button>
+    </ion-nav-buttons>
     <ion-content class="padding background-gray">
+        <div ng-hide="products.length > 0" class="text-alert" style="margin-top: 30px;">
+            <h2>Favoritos</h2>
+            <p ng-show="user.firstName">{{ user.firstName }}, esta es tu lista de ofertas favoritas</p>
+            <p ng-hide="user.firstName">Esta es tu lista de ofertas favoritas</p>
+            <p>Para agregar ofertas a esta lista clickea en los corazones que ves sobre las mismas.</p>
+        </div>
         <div ng-include="'templates/card-sales-list.html'">
         </div>
     </ion-content>
+    <div ng-show="products.length > 0" class="bottom-button-container">
+        <div class="bottom-button">
+            <button class="button button-icon ion-android-cart button-energized" ng-click="orderUp();"></button>
+        </div>
+    </div>
 </ion-view>

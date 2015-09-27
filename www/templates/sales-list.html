@@ -1,6 +1,6 @@
 <ion-list ng-controller="SalesListCtrl">
     <!--ng-show="([product] | filter:searchText).length > 0"-->
-    <div collection-repeat="product in products | orderBy: 'title'">
+    <div class="salesItem" collection-repeat="product in products | orderBy: 'title'">
         <h2 class="item item-button-right">
             {{product.title}}
             <button class="button button-icon ion-heart" ng-click="addFavorite(product.id)" ng-class="{'favorite-red': product.favorite, 'favorite-grey': !product.favorite}"></button>

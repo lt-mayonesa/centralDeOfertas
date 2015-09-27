@@ -15,4 +15,26 @@ angular.module('app.utils', [])
                         return JSON.parse($window.localStorage[key] || '{}');
                     }
                 };
+            }])
+        .factory('$customPopups', ['$ionicPopup', function ($ionicPopup) {
+                return {
+                    messageSend: function (msg) {
+                        return $ionicPopup.show({
+                            title: 'Mensaje Enviado!',
+                            subTitle: msg,
+                            buttons: [
+                                {text: 'Aceptar', type: 'button-stable'}
+                            ]
+                        });
+                    },
+                    connectionError: function () {
+                        return $ionicPopup.show({
+                            title: 'Error',
+                            subTitle: 'Lo sentimos pero hubo un error en la conección',
+                            buttons: [
+                                {text: 'Aceptar', type: 'button-stable'}
+                            ]
+                        });
+                    }
+                };
             }]);

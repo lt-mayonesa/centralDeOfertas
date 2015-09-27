@@ -2,7 +2,8 @@
 
 angular.module('app.controllers', [])
 
-        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites, DataHandler, $rootScope, Session, $ionicPlatform) {
+        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites, DataHandler, $rootScope, Session, $ionicPlatform, User) {
+            $scope.user = User.get();
             $scope.error = false;
             $scope.networkState = Session.getConnStatus();
 //            $scope.products = Sales.all();
@@ -17,16 +18,12 @@ angular.module('app.controllers', [])
                     $scope.modal.hide();
                 });
             };
-            $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
-                            $scope.singInModal = modal;
-                            $scope.singInModal.show();
-                        });
             $scope.sync = function () {
                 //esto funciona?
                 DataHandler.loadDataFromLocal();
-                
+
                 $scope.error = false;
-                /*$http.get(WS.getAll(WS.ALL_SALES)).success(function (response) {
+                $http.get(WS.getAll(WS.ALL_SALES)).success(function (response) {
                     Sales.clone(response.data);
                     Favorites.getFromLocal();
                     $http.get(WS.getTopFavorites()).success(function (response) {
@@ -34,10 +31,12 @@ angular.module('app.controllers', [])
                         Session.syncked();
                         $scope.modal.hide();
                         $scope.modal.remove();
-                        $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
-                            $scope.singInModal = modal;
-                            $scope.singInModal.show();
-                        });
+                        if (Object.keys($scope.user).length <= 0) {
+                            $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
+                                $scope.singInModal = modal;
+                                $scope.singInModal.show();
+                            });
+                        }
                     }).error(function (data, status) {
                         $scope.error = true;
                         $scope.errorMsg = 'Error cargando el ranking.';
@@ -49,7 +48,7 @@ angular.module('app.controllers', [])
                     } else {
                         $scope.errorMsg = 'No estas conectado a una red. Las ofertas pueden estar desactualizadas.';
                     }
-                });*/
+                });
             };
 
             $ionicPlatform.ready(function () {
@@ -156,9 +155,40 @@ angular.module('app.controllers', [])
             });
         })
 
-        .controller('FavoritesCtrl', function ($scope, Favorites) {
+        .controller('FavoritesCtrl', function ($scope, $ionicPopup, $customPopups, $ionicModal, $http, Favorites, User) {
             $scope.removeFav = function (id) {
                 Favorites.remove(id);
+            };
+            $scope.removeAll = function () {
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Borrar favoritos',
+                    template: '¿Estas seguro de que quieres eliminar todos tus favoritos?',
+                    cancelText: 'No',
+                    okText: 'Si',
+                    okType: 'button-assertive'
+                });
+                confirmPopup.then(function (res) {
+                    if (res) {
+                        Favorites.removeAll();
+                    } else {
+                    }
+                });
+            };
+            $scope.orderUp = function () {
+                var user = User.get();
+                if (Object.keys(user).length < 0 || user.email == '' || user.email == null) {
+                    $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
+                        $scope.orderUpWaiting = true;
+                        $scope.singInModal = modal;
+                        $scope.singInModal.show();
+                    });
+                    return false;
+                }
+                $http.get(WS.sendOrder(User.toUrl(true), Favorites.toUrl(true))).success(function (data) {
+                    $customPopups.messageSend('Gracias, prontamente nos pondremos en contacto contigo');
+                }).error(function (data, status, headers) {
+                    $customPopups.connectionError();
+                });
             };
             $scope.products = Favorites.all();
         })
@@ -181,10 +211,16 @@ angular.module('app.controllers', [])
                 $scope.detailModal.hide();
             };
             $scope.$on('$destroy', function () {
-                $scope.detailModal.remove();
+                if ($scope.detailModal)
+                    $scope.detailModal.remove();
             });
         })
-        .controller('ContactCtrl', function ($scope, $http, $ionicPopup) {
+        .controller('ContactCtrl', function ($scope, $http, $customPopups, User) {
+            var user = User.get();
+            $scope.data = {
+                firstName: user.firstName || null,
+                email: user.email || null
+            };
             $scope.fillName = false;
             $scope.fillEmail = false;
             $scope.fillMessage = false;
@@ -193,44 +229,37 @@ angular.module('app.controllers', [])
             $scope.subscribeChange = function () {
                 $scope.subscribes = !$scope.subscribes;
             };
-            $scope.sendMessage = function (data) {
-                if (data == null) {
+            $scope.sendMessage = function (info) {
+                console.log('mesanansdfasd', info);
+                if (info == null) {
                     $scope.fillName = true;
                     $scope.fillEmail = true;
                     $scope.fillMessage = true;
                     return false;
                 }
                 var canSend = true;
-                if (data.mail == null || data.mail == '') {
+                if (info.email == null || info.email == '') {
+                    console.log('mail null');
                     canSend = false;
                     $scope.fillEmail = true;
                 }
-                if (data.name == null || data.name == '') {
+                if (info.firstName == null || info.firstName == '') {
+                    console.log('mail name');
                     canSend = false;
                     $scope.fillName = true;
                 }
-                if (data.message == null || data.message == '') {
+                if (info.message == null || info.message == '') {
+                    console.log('msg null');
                     canSend = false;
                     $scope.fillMessage = true;
                 }
 
+                console.log(canSend);
                 if (canSend) {
-                    $http.get(WS.sendMessage(data.name, data.message, data.mail, $scope.subscribes)).success(function (data) {
-                        var succesPopup = $ionicPopup.show({
-                            title: 'Mensaje Enviado!',
-                            subTitle: 'Gracias por enviarnos tu opinion',
-                            buttons: [
-                                {text: 'Aceptar', type: 'button-stable'}
-                            ]
-                        });
+                    $http.get(WS.sendMessage(info.firstName, info.message, info.mail, $scope.subscribes)).success(function (data) {
+                        $customPopups.messageSend('Gracias por enviarnos tu opinion');
                     }).error(function (data, status, headers) {
-                        var errorPopup = $ionicPopup.show({
-                            title: 'Error',
-                            subTitle: 'Lo sentimos pero hubo un error en la conección',
-                            button: [
-                                {text: 'Aceptar', type: 'button-stable'}
-                            ]
-                        });
+                        $customPopups.connectionError();
                     });
                 }
             };
@@ -243,18 +272,19 @@ angular.module('app.controllers', [])
          */
         .controller('SingInCtrl', function ($scope, User) {
             $scope.user = User.get();
-            console.log($scope.user);
             $scope.fillFirstName = false;
             $scope.fillLastName = false;
             $scope.fillWork = false;
             $scope.fillEmail = false;
             $scope.fillAdress = false;
             $scope.fillPhone = false;
-            
+
+            $scope.data = {
+                cCode: 54
+            };
             $scope.userCountryCode = 54;
 
             $scope.singIn = function (data) {
-                console.log('data', data);
                 if (data == null) {
                     $scope.fillFirstName = true;
                     $scope.fillLastName = true;
@@ -274,19 +304,23 @@ angular.module('app.controllers', [])
                         $scope.user.email = data.email;
                     if (data.adress != null)
                         $scope.user.adress = data.adress;
+                    if (data.cCode != null)
+                        $scope.userCountryCode = data.cCode;
                     if (data.phone != null)
-                        $scope.user.phone = data.cCode + data.phone;
-                    
-                    console.log('User final', $scope.user);
+                        $scope.user.phone = $scope.userCountryCode + data.phone;
                     User.set($scope.user);
-                    return true;
+                    $scope.singInModal.hide();
+                    if ($scope.orderUpWaiting) {
+                        $scope.orderUp();
+                        $scope.orderUpWaiting = false;
+                    }
                 }
             };
 
             $scope.closeModal = function () {
                 $scope.singInModal.hide();
             };
-            
+
             $scope.$on('singInModal.hidden', function (e) {
                 console.log(e);
             });

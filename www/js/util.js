@@ -58,6 +58,18 @@ var WS = {
      * @type String messages-postmessage
      */
     SEND_MESSAGE: 'messages-sendemail',
+    
+    /**
+     * sends email to admin with favorites and user info.
+     * 
+     * @type String controller: messages, action: order
+     */
+    ORDER_UP: 'messages-order',
+    
+    /**
+     * 
+     * @type Object
+     */
     format: {
         json: '/json.api?www-command=',
         xml: '/xml.api?www-command=',
@@ -105,6 +117,14 @@ var WS = {
         var t = top == null ? '' : '&top=' + top;
         return WS.BASE_URL + WS.format[f] + WS.TOP_FAVORITES + t;
     },
+    
+    /**
+     * Adds favorite in server for ranking
+     * 
+     * @param {int} id
+     * @param {String} format
+     * @returns {String|Boolean}
+     */
     addFavorite: function (id, format) {
         if (id) {
             var f = format || 'json';
@@ -113,9 +133,33 @@ var WS = {
             return false;
         }
     },
+    
+    /**
+     * Sends contact|review mail to admin
+     * 
+     * @param {String} name
+     * @param {String} message
+     * @param {String} email
+     * @param {Boolean} subs
+     * @param {String} format
+     * @returns {String}
+     */
     sendMessage: function (name, message, email, subs, format) {
         var f = format || 'json';
         return WS.BASE_URL + WS.format[f] + WS.SEND_MESSAGE + '&n=' + name + '&m=' + email + '&ms=' + message + '&s=' + subs;
+    },
+    
+    /**
+     * Returns url route for sales order request.
+     * 
+     * @param {String} user
+     * @param {String} favs
+     * @param {String} format
+     * @returns {String}
+     */
+    sendOrder: function (user, favs, format) {
+        var f = format || 'json';
+        return WS.BASE_URL + WS.format[f] + WS.ORDER_UP + user + favs;
     }
 
 };

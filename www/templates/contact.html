@@ -6,14 +6,14 @@
                     <span class="form-alert" ng-show="fillName">Por favor ingrese su nombre</span>
                     <label class="item item-input item-floating-label">
                         <span class="input-label">Nombre</span>
-                        <input ng-click="fillName = false" type="text" placeholder="Nombre" ng-model="data.name">
+                        <input ng-click="fillName = false" type="text" placeholder="Nombre" ng-model="data.firstName" name="data.name">
                     </label>
                 </div>
                 <div class="label-padding">
                     <span class="form-alert" ng-show="fillEmail">Por favor ingrese un email</span>
                     <label class="item item-input item-floating-label">
                         <span class="input-label">Mail</span>
-                        <input ng-click="fillEmail = false" type="email" placeholder="Mail" ng-model="data.mail">
+                        <input ng-click="fillEmail = false" type="email" placeholder="Mail" ng-model="data.email" class="contact-input">
                     </label>
                     <ion-item class="item item-checkbox item-checkbox-right">
                         <label class="checkbox">

@@ -44,7 +44,7 @@ angular.module('app.services', [])
                 $ionicPlatform.ready(function () {
                     $cordovaSQLite.execute(db, query, parameters)
                             .then(function (result) {
-                                //console.log('execute');
+                                console.log('execute');
                                 q.resolve(result);
                             }, function (error) {
                                 console.warn('I found an error');
@@ -139,6 +139,11 @@ angular.module('app.services', [])
                     //store user
                     $localStorage.setObject('user', user);
                     return user;
+                },
+                toUrl: function (andChar) {
+                    var prevChar = andChar ? '&' : '';
+                    var url = prevChar + 'u=' + encodeURIComponent(JSON.stringify(user));
+                    return url;
                 }
             };
         })
@@ -203,6 +208,23 @@ angular.module('app.services', [])
                     sales[sales.findKeyBy('id', parseInt(id))].favorite = false;
                     var p = [id];
                     DBA.query("DELETE FROM favorites WHERE sale_id = (?)", p);
+                },
+                removeAll: function () {
+                    console.log('removing all..');
+                    DBA.query('DELETE FROM favorites').then(function () {
+                        favorites.splice(0, favorites.length);
+                        console.log('DELETED ALL FAVORITES');
+                        return true;
+                    });
+                },
+                toUrl: function (andChar) {
+                    var prevChar = andChar ? '&' : '';
+                    var url = prevChar + 'favids=';
+                    for (var i = 0; i < favorites.length; i ++) {
+                        url += favorites[i].id;
+                        if (i < favorites.length -1) url += ',';
+                    }
+                    return url;
                 }
             };
 
@@ -229,25 +251,16 @@ angular.module('app.services', [])
                 },
                 clone: function (data) {
                     products = data;
+                    var query = "INSERT INTO sales VALUES ";
                     DBA.query("DELETE FROM sales").then(function (res) {
                         for (var i = 0; i < products.length; i++) {
-                            var p = [
-                                products[i].id,
-                                products[i].title,
-                                products[i].type,
-                                products[i].category_id,
-                                products[i].brand_id,
-                                products[i].chain_id,
-                                products[i].manufacturer_id,
-                                products[i].filename,
-                                products[i].value,
-                                products[i].value_final,
-                                products[i].date_from,
-                                products[i].date_to,
-                                products[i].chain
-                            ];
-                            DBA.query("INSERT INTO sales VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", p);
+                            query += "(" + products[i].id + ",'" + products[i].title + "','" + products[i].type + "'," + products[i].category_id + "," + products[i].brand_id + "," + products[i].chain_id + "," + products[i].manufacturer_id + ",'" + products[i].filename + "','" + products[i].value + "','" + products[i].value_final + "','" + products[i].date_from + "','" + products[i].date_to + "','" + products[i].chain + "')";
+                            if (i < products.length - 1)
+                                query += ",";
                         }
+                        DBA.query(query).then(function (res) {
+                            console.log('Sales inserted correctly');
+                        });
                     });
                     return true;
                 },
@@ -411,11 +424,16 @@ angular.module('app.services', [])
                         }
                     }
                     categories = data;
+                    var query = "INSERT INTO categories VALUES ";
                     DBA.query("DELETE FROM categories").then(function (res) {
                         for (var i = 0; i < data.length; i++) {
-                            var p = [data[i].id, data[i].name];
-                            DBA.query("INSERT INTO categories VALUES (?,?)", p);
+                            query += "(" + data[i].id + ",'" + data[i].name + "')";
+                            if (i < data.length - 1)
+                                query += ",";
                         }
+                        DBA.query(query).then(function () {
+                            console.log('Categories inserted correctly');
+                        });
                     });
                     return true;
                 }
@@ -464,11 +482,16 @@ angular.module('app.services', [])
                         }
                     }
                     chains = data;
+                    var query = "INSERT INTO chains VALUES ";
                     DBA.query("DELETE FROM chains").then(function (res) {
                         for (var i = 0; i < data.length; i++) {
-                            var p = [data[i].id, data[i].name];
-                            DBA.query("INSERT INTO chains VALUES (?,?)", p);
+                            query += "(" + data[i].id + ",'" + data[i].name + "')";
+                            if (i < data.length - 1)
+                                query += ",";
                         }
+                        DBA.query(query).then(function () {
+                            console.log('Chains inserted correctly');
+                        });
                     });
                     return true;
                 }
@@ -517,11 +540,16 @@ angular.module('app.services', [])
                         }
                     }
                     brands = data;
+                    var query = "INSERT INTO brands VALUES ";
                     DBA.query("DELETE FROM brands").then(function (res) {
                         for (var i = 0; i < data.length; i++) {
-                            var p = [data[i].id, data[i].name];
-                            DBA.query("INSERT INTO brands VALUES (?,?)", p);
+                            query += "(" + data[i].id + ",'" + data[i].name + "')";
+                            if (i < data.length - 1)
+                                query += ",";
                         }
+                        DBA.query(query).then(function () {
+                            console.log('Brands inserted correctly');
+                        });
                     });
                     return true;
                 }
