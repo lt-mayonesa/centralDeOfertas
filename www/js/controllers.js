@@ -11,6 +11,10 @@ angular.module('app.controllers', [])
                 $scope.modal = modal;
                 $scope.modal.show();
             });
+            $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
+                $scope.singInModal = modal;
+            });
+
             $scope.syncLater = function () {
                 Sales.updateFromLocal();
                 $scope.$on('finishSales', function () {
@@ -32,10 +36,8 @@ angular.module('app.controllers', [])
                         $scope.modal.hide();
                         $scope.modal.remove();
                         if (Object.keys($scope.user).length <= 0) {
-                            $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
-                                $scope.singInModal = modal;
+                            if (!$scope.singInModal.isShown())
                                 $scope.singInModal.show();
-                            });
                         }
                     }).error(function (data, status) {
                         $scope.error = true;
@@ -184,8 +186,9 @@ angular.module('app.controllers', [])
                 if (Object.keys(user).length < 0 || user.email == '' || user.email == null) {
                     $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
                         $scope.orderUpWaiting = true;
+                        if (!$scope.singInModal.isShown())
+                            $scope.singInModal.show();
                         $scope.singInModal = modal;
-                        $scope.singInModal.show();
                     });
                     return false;
                 }
@@ -203,7 +206,11 @@ angular.module('app.controllers', [])
                             user.knowsOrderUp = $scope.knowsOrderUp;
                             User.set(user);
                             $http.get(WS.sendOrder(User.toUrl(true), Favorites.toUrl(true))).success(function (data) {
-                                $customPopups.messageSend('Gracias!, prontamente nos pondremos en contacto contigo');
+                                if (data['www-response-code'] == 106) {
+                                    $customPopups.connectionError();
+                                } else {
+                                    $customPopups.messageSend('Gracias!, prontamente nos pondremos en contacto contigo');
+                                }
                             }).error(function (data, status, headers) {
                                 $customPopups.connectionError();
                             });
@@ -280,7 +287,7 @@ angular.module('app.controllers', [])
                 }
 
                 if (canSend) {
-                    $http.get(WS.sendMessage(info.firstName, info.message, info.mail, $scope.subscribes)).success(function (data) {
+                    $http.get(WS.sendMessage(info.firstName, info.message, info.email, $scope.subscribes)).success(function (data) {
                         $customPopups.messageSend('Gracias por enviarnos tu opinion');
                     }).error(function (data, status, headers) {
                         $customPopups.connectionError();
@@ -335,6 +342,7 @@ angular.module('app.controllers', [])
 
                     User.set($scope.user);
                     $scope.singInModal.hide();
+                    $scope.singInModal.remove();
                     if ($scope.orderUpWaiting) {
                         $scope.orderUp();
                         $scope.orderUpWaiting = false;
@@ -344,6 +352,8 @@ angular.module('app.controllers', [])
 
             $scope.closeModal = function () {
                 $scope.singInModal.hide();
+                $scope.singInModal.remove();
+
             };
 
             $scope.$on('singInModal.hidden', function (e) {
