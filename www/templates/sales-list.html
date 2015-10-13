@@ -1,15 +1,25 @@
 <ion-list ng-controller="SalesListCtrl">
-    <!--ng-show="([product] | filter:searchText).length > 0"-->
-    <div class="salesItem" collection-repeat="product in products | orderBy: 'title'">
-        <h2 class="item item-button-right">
-            {{product.title}}
-            <button class="button button-icon ion-bookmark" ng-click="addFavorite(product.id)" ng-class="{'is-favorite': product.favorite, 'isnot-favorite': !product.favorite}"></button>
+    <div ng-class="{'sales-item-big': listView == 0, 'sales-item-medium': listView == 1, 'sales-item-small' : listView == 2}" ng-repeat="product in products | orderBy:predicate:reverse">
+        <h2 class="item" ng-click="showPopup(product.id)">
+            {{ product.title}}
         </h2>
-        <ion-item class="item item-thumbnail-left" ng-click="showPopup(product.id)" style="padding-top: 16px;">
-            <!--<i ng-show="product.favorite" class="icon ion-android-done tick-favorite" ></i>-->
-            <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{product.filename| checkImgExtension}}" alt="img" onerror="this.onerror=null;this['src']='img/default_product.gif';" />
-            <p>{{product.type}}</p>
-            <p class="item-prize"><span class="place-badge style-assertive">{{product.chain}}</span><strong>{{product.value}}</strong></p>
+        <ion-item ng-show="listView == 0" class="item" ng-click="showPopup(product.id)">
+            <div class="container-sale-img">
+                <img height="340" ng-src="http://centraldeofertas.com.ar/uploads/sales/{{ product.filename| checkImgExtension }}" alt="img" onerror="this.onerror=null;this['src']='img/default_product.gif';" />
+                <div class="sale-info">
+                    <p class="item-prize"><span class="place-badge style-assertive">{{ product.brand_id | getBrandName }}</span><strong>{{ product.value}}</strong></p>
+                    <p class="sale-info-type">{{ product.type}}</p>
+                </div>
+            </div>                
         </ion-item>
+        <ion-item ng-show="listView == 1" class="item item-thumbnail-left" ng-click="showPopup(product.id)" style="padding-top: 16px;">
+            <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{ product.filename| checkImgExtension }}" alt="img" onerror="this.onerror=null;this['src']='img/default_product.gif';" />
+            <p>{{ product.type}}</p>
+            <p class="item-prize"><span class="place-badge style-assertive">{{ product.brand_id | getBrandName }}</span><strong>{{ product.value}}</strong></p>
+        </ion-item>
+        <div ng-hide="listView == 2" class="button-bar bar-light">
+            <a ng-hide="product.favorite" ng-click="addFavorite(product.id)" class="button icon-left ion-bookmark">Recordar</a>
+            <a class="button icon-left ion-android-cart">Encargar</a>
+        </div>
     </div>
 </ion-list>

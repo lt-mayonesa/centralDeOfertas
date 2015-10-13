@@ -44,7 +44,7 @@ angular.module('app.services', [])
                 $ionicPlatform.ready(function () {
                     $cordovaSQLite.execute(db, query, parameters)
                             .then(function (result) {
-                                console.log('execute');
+//                                console.log('execute');
                                 q.resolve(result);
                             }, function (error) {
                                 console.warn('I found an error');
@@ -253,7 +253,7 @@ angular.module('app.services', [])
                     }
                     return total;
                 },
-                clone: function (data) {
+                clone: function (data, callback) {
                     products = data;
                     var query = "INSERT INTO sales VALUES ";
                     DBA.query("DELETE FROM sales").then(function (res) {
@@ -264,6 +264,7 @@ angular.module('app.services', [])
                         }
                         DBA.query(query).then(function (res) {
                             console.log('Sales inserted correctly');
+                            return callback(true);
                         });
                     });
                     return true;

@@ -174,4 +174,10 @@ angular.module('app', ['ionic', 'ngCordova', 'app.controllers', 'app.services', 
                 }
                 return str;
             };
+        })
+        .filter('getBrandName', function (Brands) {
+            return function (id) {
+                var brand = Brands.get(id);
+                return brand ? brand.name : 'Sin marca';
+            };
         });

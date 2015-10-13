@@ -3,8 +3,10 @@
 angular.module('app.controllers', [])
 
         .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites, DataHandler, $rootScope, Session, $ionicPlatform, User) {
+            $scope.products = Sales.all();
             $scope.user = User.get();
             $scope.error = false;
+            $scope.options = false;
             $scope.networkState = Session.getConnStatus();
 //            $scope.products = Sales.all();
             $ionicModal.fromTemplateUrl('templates/loader.html', {scope: $scope, hardwareBackButtonClose: false}).then(function (modal) {
@@ -12,7 +14,7 @@ angular.module('app.controllers', [])
                 $scope.modal.show();
             });
             $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
-                $scope.singInModal = modal;
+                $rootScope.singInModal = modal;
             });
 
             $scope.syncLater = function () {
@@ -28,7 +30,10 @@ angular.module('app.controllers', [])
 
                 $scope.error = false;
                 $http.get(WS.getAll(WS.ALL_SALES)).success(function (response) {
-                    Sales.clone(response.data);
+                    Sales.clone(response.data, function (succes) {
+                        if (succes)
+                            $scope.products = Sales.all();
+                    });
                     Favorites.getFromLocal();
                     $http.get(WS.getTopFavorites()).success(function (response) {
                         $scope.favorites = Sales.favoritesByIds(response.data);
@@ -36,8 +41,8 @@ angular.module('app.controllers', [])
                         $scope.modal.hide();
                         $scope.modal.remove();
                         if (Object.keys($scope.user).length <= 0) {
-                            if (!$scope.singInModal.isShown())
-                                $scope.singInModal.show();
+                            if (!$rootScope.singInModal.isShown())
+                                $rootScope.singInModal.show();
                         }
                     }).error(function (data, status) {
                         $scope.error = true;
@@ -60,9 +65,9 @@ angular.module('app.controllers', [])
             $scope.searchSales = function (value) {
                 if (value.length >= 3) {
                     var sales = Sales.search(value, $scope.products);
-                    $scope.products = sales;
+                    $scope.searchProducts = sales;
                 } else {
-                    $scope.products = [];
+                    $scope.searchProducts = [];
                 }
             };
 
@@ -78,6 +83,9 @@ angular.module('app.controllers', [])
                     $scope.sync();
                 }
             });
+            $scope.toggleOptions = function () {
+                $scope.options = !$scope.options;
+            };
         })
 
         .controller('CategoriesCtrl', function ($scope, $http, $timeout, Categories) {
@@ -157,7 +165,7 @@ angular.module('app.controllers', [])
             });
         })
 
-        .controller('FavoritesCtrl', function ($scope, $ionicPopup, $customPopups, $ionicModal, $http, Favorites, User) {
+        .controller('FavoritesCtrl', function ($rootScope, $scope, $ionicPopup, $customPopups, $ionicModal, $http, Favorites, User) {
             var user = User.get();
             $scope.knowsOrderUp = user.knowsOrderUp ? true : false;
             $scope.removeFav = function (id) {
@@ -186,9 +194,9 @@ angular.module('app.controllers', [])
                 if (Object.keys(user).length < 0 || user.email == '' || user.email == null) {
                     $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
                         $scope.orderUpWaiting = true;
-                        if (!$scope.singInModal.isShown())
-                            $scope.singInModal.show();
-                        $scope.singInModal = modal;
+                        if (!$rootScope.singInModal.isShown())
+                            $rootScope.singInModal.show();
+                        $rootScope.singInModal = modal;
                     });
                     return false;
                 }
@@ -229,8 +237,20 @@ angular.module('app.controllers', [])
             $scope.products = Favorites.all();
         })
 
-        .controller('SalesListCtrl', function ($scope, $ionicPopup, $ionicModal, Favorites, Sales, Brands, Categories) {
-            $scope.detailModal = null;
+        .controller('SalesListCtrl', function ($rootScope, $scope, $ionicPopup, $ionicModal, Favorites, Sales, Brands, Categories) {
+            /*
+             * defines list class
+             * scope.listView = {
+             *  0 = sales-item-big
+             *  1 = sales-item-medium
+             *  2 = sales-item-small
+             *  }
+             */
+            $rootScope.listView = 0;
+            $rootScope.detailModal = null;
+            $rootScope.predicate = 'title';
+            $rootScope.reverse = false;
+
             $scope.addFavorite = function (id) {
                 Favorites.add(id);
             };
@@ -239,16 +259,30 @@ angular.module('app.controllers', [])
                 $scope.sale.brand = Brands.get($scope.sale.brand_id).name;
                 $scope.sale.category = Categories.get($scope.sale.category_id).name;
                 $ionicModal.fromTemplateUrl('templates/sale-detail.html', {scope: $scope, animation: 'slide-in-right'}).then(function (modal) {
-                    $scope.detailModal = modal;
-                    $scope.detailModal.show();
+                    $rootScope.detailModal = modal;
+                    $rootScope.detailModal.show();
                 });
             };
-            $scope.closeModal = function () {
-                $scope.detailModal.hide();
+
+            $rootScope.setListView = function (listViewId) {
+                var copy = angular.copy($scope.products);
+                
+                $rootScope.listView = listViewId;
+                $scope.products = copy;
+            };
+            $rootScope.orderList = function (predicate, reverse) {
+                $rootScope.reverse = reverse;
+                $rootScope.predicate = predicate;
+            };
+            $rootScope.priceValue = function (item) {
+                return parseFloat(item.value);
+            };
+            $scope.closeDetail = function () {
+                $rootScope.detailModal.hide();
             };
             $scope.$on('$destroy', function () {
-                if ($scope.detailModal)
-                    $scope.detailModal.remove();
+//                if ($rootScope.detailModal)
+//                    $rootScope.detailModal.remove();
             });
         })
         .controller('ContactCtrl', function ($scope, $http, $customPopups, User) {
@@ -301,7 +335,7 @@ angular.module('app.controllers', [])
          * Handles al user Input data to app
          * 
          */
-        .controller('SingInCtrl', function ($scope, User) {
+        .controller('SingInCtrl', function ($rootScope, $scope, User) {
             $scope.user = User.get();
             $scope.fillFirstName = false;
             $scope.fillLastName = false;
@@ -341,8 +375,8 @@ angular.module('app.controllers', [])
                         $scope.user.phone = $scope.userCountryCode + data.phone;
 
                     User.set($scope.user);
-                    $scope.singInModal.hide();
-                    $scope.singInModal.remove();
+                    $rootScope.singInModal.hide();
+                    $rootScope.singInModal.remove();
                     if ($scope.orderUpWaiting) {
                         $scope.orderUp();
                         $scope.orderUpWaiting = false;
@@ -351,13 +385,15 @@ angular.module('app.controllers', [])
             };
 
             $scope.closeModal = function () {
-                $scope.singInModal.hide();
-                $scope.singInModal.remove();
-
+                $rootScope.singInModal.hide();
+//                $rootScope.singInModal.remove();
             };
 
             $scope.$on('singInModal.hidden', function (e) {
                 console.log(e);
             });
 
+        })
+        .controller('DetailCtrl', function ($scope, $stateParams, Sales) {
+            console.log($stateParams.id);
         });

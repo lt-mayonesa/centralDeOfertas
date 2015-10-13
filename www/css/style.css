@@ -14,7 +14,7 @@
 }
 
 .header-shadow {
-    box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.2);
 }
 .footer-shadow {
     box-shadow: -1px -1px 5px rgba(0,0,0,0.2);
@@ -68,18 +68,43 @@
     right: 8px;
 }
 
+.container-sale-img {
+    position: relative;
+}
+
+.container-sale-img img {
+    display: block;
+    margin: 0 auto;
+    min-height: 280px;
+    max-height: 340px;
+    max-width: 700px;
+    width: auto;
+    height: auto;
+}
+
 .item-prize {
     background-color: rgba(255, 120, 73,0.2);
     border-radius: 10px;
     padding: 0;
     padding-right: 10px;
-    line-height: 26px;
+    line-height: 32px;
+    height: 28px;
     margin: 0;
     margin-top: 8px;
     text-align: right;
 }
 .item-prize strong {
     font-size: 16px;
+}
+
+.container-sale-img .sale-info {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+.sale-info .sale-info-type {
+    text-align: center;
 }
 
 .item-favorite {
@@ -95,6 +120,11 @@
     font-size: 25px !important;
     top: 4px !important;
     right: 6px !important;
+}
+
+.search-container > div {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .flat-title {
@@ -209,17 +239,21 @@
     margin-top: 4px;
 }
 
-.salesItem {
-    margin: 10px 0px;
-    padding: 10px;
+.sales-item-medium, .sales-item-big {
+    margin: 0px 0px;
+    padding: 10px 0px;
 }
-.salesItem h2 {
+.sales-item-medium ion-item {
     border-left: 2px solid #66ccff;
 }
 
-.salesItem h2 button {
+.sales-item-medium h2 button {
     font-size: 50px !important;
     margin-top: -16px;
+}
+
+.sales-item-small {
+    padding: 0;
 }
 
 .bottom-button-container {
@@ -259,4 +293,71 @@
 }
 .contact-input.ng-invalid {
     color: tomato;
+}
+
+.single-tab a {
+    border: none !important;
+}
+
+.home-buttons {
+    position: absolute;
+    padding: 3px;
+    padding-top: 50px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: #FFC900;
+    box-shadow: 0px 2px 2px rgba(0,0,0,0.2);
+    transition: all cubic-bezier(0.1, 0.8, 0.9, 1) 400ms;
+    transform: translateY(-100%);
+}
+
+.hide-home-buttons {
+    transform: translateY(-100%);
+}
+.show-home-buttons {
+    transform: translateY(0);
+}
+
+.home-buttons div {
+    float: right;
+    width: 22%;
+    text-align: center;
+}
+.home-buttons div:first-of-type {
+    width: 34%;
+}
+
+.home-buttons div p {
+    margin-bottom: 0px;
+    color: rgba(0,0,0,0.6);
+}
+
+.home-buttons div {
+    float: right;
+    display: block;
+    border-left: 1px solid rgba(0,0,0,0.2);
+}
+.home-buttons div:last-of-type {
+    border: none;
+}
+.home-buttons div ul li:first-of-type {
+    margin-right: 1px;
+}
+.home-buttons div ul li:last-of-type {
+    margin-left: 1px;
+}
+.home-buttons div ul li {
+    float: right;
+    line-height: 24px;
+    padding: 1.5px;
+    height: 34px;
+    /*background-color: #444;*/
+    margin: 2px;
+}
+
+.sales-header-icon {
+    font-size: 18px;
+    line-height: 28px;
 }

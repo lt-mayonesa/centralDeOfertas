@@ -1,17 +1,52 @@
 <ion-view view-title="Central de Ofertas">
-    <p>{{networkState}}</p>
-    <ion-content class="padding background-gray" has-bouncing='false'>
-        <div class="card">
-            <label class="item item-input">
-                <!--<a class="button button-icon icon ion-gear-b icon-pos-right"></a>-->
-                <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" placeholder="producto, marca, precio, etc" ng-change="searchSales(searchText)" ng-model="searchText">
-            </label>
+    <ion-nav-buttons side="right">
+        <button class="button button-icon ion-android-more-vertical" ng-click="toggleOptions()"></button>
+    </ion-nav-buttons>
+    <div class="home-buttons" ng-class="{'show-home-buttons': options, 'hide-home-buttons': !options}">
+        <!--<p>Ordenar:</p>-->
+        <div>
+            <p>Tamaño</p>
+            <ul>
+                <li><a ng-click="setListView(0)" class="button button-small sales-header-icon button-icon icon-ic-list-big" ng-class="{'active': listView == 0}"></a></li>
+                <li><a ng-click="setListView(1)" class="button button-small sales-header-icon button-icon icon-ic-list-medium" ng-class="{'active': listView == 1}"></a></li>
+                <li><a ng-click="setListView(2)" class="button button-small sales-header-icon button-icon icon-ic-list-small" ng-class="{'active': listView == 2}"></a></li>
+            </ul>
         </div>
-        <ion-scroll ng-show="products.length > 0" zooming="false" direction="y" style="width: 100%; max-height: 220px;" class="search-view">
-            <div ng-include="'templates/search-list.html'">
-            </div>
-        </ion-scroll>
-        <div ng-include="'templates/ranking.html'"></div>
+        <div>
+            <p>Nombre</p>
+            <ul>
+                <li><a ng-click="orderList('title', false)" class="button button-small sales-header-icon button-icon icon-sort-alpha-asc" ng-class="{'active': predicate == 'title' && reverse == false}"></a></li>
+                <li><a ng-click="orderList('title', true)" class="button button-small sales-header-icon button-icon icon-sort-alpha-desc" ng-class="{'active': predicate == 'title' && reverse == true}"></a></li>
+            </ul>
+        </div>
+        <div>
+            <p>Precio</p>
+            <ul>
+                <li><a ng-click="orderList(priceValue, false)" class="button button-small sales-header-icon button-icon icon-sort-numeric-asc" ng-class="{'active': predicate == priceValue && reverse == false}"></a></li>
+                <li><a ng-click="orderList(priceValue, true)" class="button button-small sales-header-icon button-icon icon-sort-numberic-desc" ng-class="{'active': predicate == priceValue && reverse == true}"></a></li>
+            </ul>
+        </div>
+        <div>
+            <p>Marca</p>
+            <ul>
+                <li><a ng-click="orderList('brand', false)" class="button button-small sales-header-icon button-icon icon-sort-brand-asc" ng-class="{'active': predicate == 'brand' && reverse == false}"></a></li>
+                <li><a ng-click="orderList('brand', true)" class="button button-small sales-header-icon button-icon icon-sort-brand-desc" ng-class="{'active': predicate == 'brand' && reverse == true}"></a></li>
+            </ul>
+        </div>
+    </div>
+    <ion-content class="padding background-gray" has-bouncing='false'>
+        <!--        <div class="card">
+                    <label class="item item-input">
+                        <a class="button button-icon icon ion-gear-b icon-pos-right"></a>
+                        <i class="icon ion-search placeholder-icon"></i>
+                        <input type="text" placeholder="producto, marca, precio, etc" ng-change="searchSales(searchText)" ng-model="searchText">
+                    </label>
+                    <ion-scroll ng-show="products.length > 0" zooming="false" direction="y" style="width: 100%; max-height: 220px; margin-top: 0;">
+                        <div ng-include="'templates/search-list.html'">
+                        </div>
+                    </ion-scroll>
+                </div>-->
+        <div ng-include="'templates/sales-list.html'"></div>
+        <!--<div ng-include="'templates/ranking.html'"></div>-->
     </ion-content>
 </ion-view>

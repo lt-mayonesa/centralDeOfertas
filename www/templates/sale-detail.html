@@ -1,6 +1,6 @@
 <ion-modal-view style="background-color: #f3f3f3">
     <ion-nav-bar class="bar-energized header-shadow">
-        <ion-nav-back-button ng-click="closeModal()" style="display: block;"></ion-nav-back-button>
+        <ion-nav-back-button ng-click="closeDetail()" style="display: block;"></ion-nav-back-button>
 <!--        <ion-nav-buttons side="right">
             <button class="button button-icon ion-heart" ng-click="addFavorite(sale.id)" ng-class="{'favorite-red': sale.favorite, 'favorite-grey': !sale.favorite}"></button>
         </ion-nav-buttons>-->
@@ -49,9 +49,15 @@
             </div>
         </div>
     </ion-content>
-    <div class="bottom-button-container">
+    <!--div class="bottom-button-container">
         <div class="bottom-button sale-like-btn">
             <button class="button button-icon ion-bookmark" ng-click="addFavorite(sale.id)" ng-class="{'is-favorite': sale.favorite, 'isnot-favorite': !sale.favorite}"></button>
+        </div>
+    </div-->
+    <div class="bar bar-footer bar-light">
+        <div class="button-bar bar-light">
+            <a ng-hide="sale.favorite" ng-click="addFavorite(sale.id)" class="button icon-left ion-bookmark">Recordar</a>
+            <a class="button icon-left ion-android-cart">Encargar</a>
         </div>
     </div>
 </ion-modal-view>
