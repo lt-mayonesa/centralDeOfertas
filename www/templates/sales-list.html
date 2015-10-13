@@ -19,7 +19,7 @@
         </ion-item>
         <div ng-hide="listView == 2" class="button-bar bar-light">
             <a ng-hide="product.favorite" ng-click="addFavorite(product.id)" class="button icon-left ion-bookmark">Recordar</a>
-            <a class="button icon-left ion-android-cart">Encargar</a>
+            <a class="button icon-left ion-android-cart" ng-click="orderUp(product)">Encargar</a>
         </div>
     </div>
 </ion-list>

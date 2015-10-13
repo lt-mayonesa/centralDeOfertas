@@ -2,7 +2,7 @@
 
 angular.module('app.controllers', [])
 
-        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites, DataHandler, $rootScope, Session, $ionicPlatform, User) {
+        .controller('LoaderCtrl', function ($scope, $http, $ionicModal, Sales, Favorites, DataHandler, $rootScope, Session, $ionicPlatform, User, Brands, Chains, Categories) {
             $scope.products = Sales.all();
             $scope.user = User.get();
             $scope.error = false;
@@ -29,6 +29,21 @@ angular.module('app.controllers', [])
                 DataHandler.loadDataFromLocal();
 
                 $scope.error = false;
+                $http.get(WS.getAll(WS.ALL_BRANDS)).success(function (response) {
+                    Brands.clone(response.data);
+                }).error(function (error) {
+                    Brands.updateFromLocal();
+                });
+                $http.get(WS.getAll(WS.ALL_CHAINS)).success(function (response) {
+                    Chains.clone(response.data);
+                }).error(function (error) {
+                    Chains.updateFromLocal();
+                });
+                $http.get(WS.getAll(WS.ALL_CATEGORIES)).success(function (response) {
+                    Categories.clone(response.data);
+                }).error(function (error) {
+                    Categories.updateFromLocal();
+                });
                 $http.get(WS.getAll(WS.ALL_SALES)).success(function (response) {
                     Sales.clone(response.data, function (succes) {
                         if (succes)
@@ -190,7 +205,7 @@ angular.module('app.controllers', [])
                 $scope.knowsOrderUp = !$scope.knowsOrderUp;
                 console.log($scope.knowsOrderUp);
             };
-            $scope.orderUp = function () {
+            $scope.orderUp = function (item) {
                 if (Object.keys(user).length < 0 || user.email == '' || user.email == null) {
                     $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
                         $scope.orderUpWaiting = true;
@@ -211,9 +226,15 @@ angular.module('app.controllers', [])
                     });
                     orderUpConfirm.then(function (res) {
                         if (res) {
+                            var data;
+                            if (item) {
+                                data = '&favids=' + item.id;
+                            } else {
+                                data = Favorites.toUrl(true);
+                            }
                             user.knowsOrderUp = $scope.knowsOrderUp;
                             User.set(user);
-                            $http.get(WS.sendOrder(User.toUrl(true), Favorites.toUrl(true))).success(function (data) {
+                            $http.get(WS.sendOrder(User.toUrl(true), data)).success(function (data) {
                                 if (data['www-response-code'] == 106) {
                                     $customPopups.connectionError();
                                 } else {
@@ -237,7 +258,7 @@ angular.module('app.controllers', [])
             $scope.products = Favorites.all();
         })
 
-        .controller('SalesListCtrl', function ($rootScope, $scope, $ionicPopup, $ionicModal, Favorites, Sales, Brands, Categories) {
+        .controller('SalesListCtrl', function ($rootScope, $scope, $http, $ionicPopup, $customPopups, $ionicModal, Favorites, User, Sales, Brands, Categories) {
             /*
              * defines list class
              * scope.listView = {
@@ -266,7 +287,7 @@ angular.module('app.controllers', [])
 
             $rootScope.setListView = function (listViewId) {
                 var copy = angular.copy($scope.products);
-                
+
                 $rootScope.listView = listViewId;
                 $scope.products = copy;
             };
@@ -284,6 +305,58 @@ angular.module('app.controllers', [])
 //                if ($rootScope.detailModal)
 //                    $rootScope.detailModal.remove();
             });
+            $scope.orderUp = function (item) {
+                if (Object.keys(User.get()).length < 0 || User.get().email == '' || User.get().email == null) {
+                    $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
+                        $scope.orderUpWaiting = true;
+                        if (!$rootScope.singInModal.isShown()) {
+                            $rootScope.singInModal.show();
+                        } else {
+                            $rootScope.singInModal = modal;
+                        }
+                    });
+                    return false;
+                }
+                if (!user.knowsOrderUp) {
+                    var orderUpConfirm = $ionicPopup.confirm({
+                        title: 'Pedido',
+                        scope: $scope,
+                        templateUrl: 'templates/confirm-popup.html',
+                        cancelText: 'No',
+                        okText: 'Si',
+                        okType: 'button-balanced'
+                    });
+                    orderUpConfirm.then(function (res) {
+                        if (res) {
+                            var data;
+                            if (item) {
+                                data = '&favids=' + item.id;
+                            } else {
+                                data = Favorites.toUrl(true);
+                            }
+                            user.knowsOrderUp = $scope.knowsOrderUp;
+                            User.set(user);
+                            $http.get(WS.sendOrder(User.toUrl(true), data)).success(function (data) {
+                                if (data['www-response-code'] == 106) {
+                                    $customPopups.connectionError();
+                                } else {
+                                    $customPopups.messageSend('Gracias!, prontamente nos pondremos en contacto contigo');
+                                }
+                            }).error(function (data, status, headers) {
+                                $customPopups.connectionError();
+                            });
+                        } else {
+                            return false;
+                        }
+                    });
+                } else {
+                    $http.get(WS.sendOrder(User.toUrl(true), Favorites.toUrl(true))).success(function (data) {
+                        $customPopups.messageSend('Gracias!, prontamente nos pondremos en contacto contigo');
+                    }).error(function (data, status, headers) {
+                        $customPopups.connectionError();
+                    });
+                }
+            };
         })
         .controller('ContactCtrl', function ($scope, $http, $customPopups, User) {
             var user = User.get();
@@ -375,8 +448,9 @@ angular.module('app.controllers', [])
                         $scope.user.phone = $scope.userCountryCode + data.phone;
 
                     User.set($scope.user);
+                    $scope.user = User.get();
                     $rootScope.singInModal.hide();
-                    $rootScope.singInModal.remove();
+//                    $rootScope.singInModal.remove();
                     if ($scope.orderUpWaiting) {
                         $scope.orderUp();
                         $scope.orderUpWaiting = false;

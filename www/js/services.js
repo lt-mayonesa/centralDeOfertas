@@ -224,9 +224,10 @@ angular.module('app.services', [])
                 toUrl: function (andChar) {
                     var prevChar = andChar ? '&' : '';
                     var url = prevChar + 'favids=';
-                    for (var i = 0; i < favorites.length; i ++) {
+                    for (var i = 0; i < favorites.length; i++) {
                         url += favorites[i].id;
-                        if (i < favorites.length -1) url += ',';
+                        if (i < favorites.length - 1)
+                            url += ',';
                     }
                     return url;
                 }
@@ -557,6 +558,70 @@ angular.module('app.services', [])
                         });
                     });
                     return true;
+                }
+            };
+        })
+
+        
+        .factory('Order', function (User, Sales, Favorites) {
+            return {
+                /**
+                 *  TODO funcion de enviar pedido como servicio
+                 *  
+                 *  
+                 * @param {type} item
+                 * @returns {Boolean}
+                 */
+                send: function (item) {
+                    var user = User.get();
+                    if (Object.keys(user).length < 0 || user.email == '' || user.email == null) {
+                        $ionicModal.fromTemplateUrl('templates/singin-form.html', {scope: $scope}).then(function (modal) {
+                            $scope.orderUpWaiting = true;
+                            if (!$rootScope.singInModal.isShown())
+                                $rootScope.singInModal.show();
+                            $rootScope.singInModal = modal;
+                        });
+                        return false;
+                    }
+                    if (!user.knowsOrderUp) {
+                        var orderUpConfirm = $ionicPopup.confirm({
+                            title: 'Pedido',
+                            scope: $scope,
+                            templateUrl: 'templates/confirm-popup.html',
+                            cancelText: 'No',
+                            okText: 'Si',
+                            okType: 'button-balanced'
+                        });
+                        orderUpConfirm.then(function (res) {
+                            if (res) {
+                                var data;
+                                if (item) {
+                                    data = '&favids=' + item.id;
+                                } else {
+                                    data = Favorites.toUrl(true);
+                                }
+                                user.knowsOrderUp = $scope.knowsOrderUp;
+                                User.set(user);
+                                $http.get(WS.sendOrder(User.toUrl(true), data)).success(function (data) {
+                                    if (data['www-response-code'] == 106) {
+                                        $customPopups.connectionError();
+                                    } else {
+                                        $customPopups.messageSend('Gracias!, prontamente nos pondremos en contacto contigo');
+                                    }
+                                }).error(function (data, status, headers) {
+                                    $customPopups.connectionError();
+                                });
+                            } else {
+                                return false;
+                            }
+                        });
+                    } else {
+                        $http.get(WS.sendOrder(User.toUrl(true), Favorites.toUrl(true))).success(function (data) {
+                            $customPopups.messageSend('Gracias!, prontamente nos pondremos en contacto contigo');
+                        }).error(function (data, status, headers) {
+                            $customPopups.connectionError();
+                        });
+                    }
                 }
             };
         })

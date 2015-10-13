@@ -7,8 +7,8 @@
         <div class="item item-thumbnail-right">
             <img ng-src="http://centraldeofertas.com.ar/uploads/sales/{{product.filename| checkImgExtension}}" alt="img" onerror="this.onerror=null;this['src']='img/default_product.gif';" />
             <p>{{product.type}}</p>
-            <p>{{product.value}}</p>
-            <p class="place-badge style-assertive">{{product.chain}}</p>
+            <p><strong>{{product.value}}</strong></p>
+            <p class="place-badge style-assertive">{{product.brand_id | getBrandName}}</p>
         </div>
     </div>
 </div>

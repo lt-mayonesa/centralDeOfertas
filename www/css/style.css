@@ -87,8 +87,7 @@
     border-radius: 10px;
     padding: 0;
     padding-right: 10px;
-    line-height: 32px;
-    height: 28px;
+    line-height: 26px;
     margin: 0;
     margin-top: 8px;
     text-align: right;
@@ -99,12 +98,16 @@
 
 .container-sale-img .sale-info {
     position: absolute;
-    bottom: 10px;
+    bottom: 2px;
     width: 100%;
 }
 
 .sale-info .sale-info-type {
+    color: black;
+    margin-top: 8px;
     text-align: center;
+    background-color: rgba(255,255,255,0.4);
+    border-radius: 3px;
 }
 
 .item-favorite {
@@ -309,15 +312,16 @@
     z-index: 10;
     background-color: #FFC900;
     box-shadow: 0px 2px 2px rgba(0,0,0,0.2);
-    transition: all cubic-bezier(0.1, 0.8, 0.9, 1) 400ms;
-    transform: translateY(-100%);
+    transition: all ease-in-out 300ms;
 }
 
 .hide-home-buttons {
-    transform: translateY(-100%);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
 }
 .show-home-buttons {
-    transform: translateY(0);
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
 }
 
 .home-buttons div {
