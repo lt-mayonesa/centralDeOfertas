@@ -54,10 +54,10 @@
             <button class="button button-icon ion-bookmark" ng-click="addFavorite(sale.id)" ng-class="{'is-favorite': sale.favorite, 'isnot-favorite': !sale.favorite}"></button>
         </div>
     </div-->
-    <div class="bar bar-footer bar-light">
+    <!--div class="bar bar-footer bar-light">
         <div class="button-bar bar-light">
             <a ng-hide="sale.favorite" ng-click="addFavorite(sale.id)" class="button icon-left ion-bookmark">Recordar</a>
-            <a class="button icon-left ion-android-cart">Encargar</a>
+            <a class="button icon-left ion-android-cart" ng-click="orderUp(sale)">Encargar</a>
         </div>
-    </div>
+    </div-->
 </ion-modal-view>
